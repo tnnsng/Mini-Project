@@ -2,8 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "FontStyle";
+  src: url("./font/PK Maehongson-Medium.ttf") format("truetype");
+  font-style: normal;
+}
+
 * {
-  font-family: "Kodchasan", sans-serif;
+  font-family: "FontStyle", sans-serif;
 }
 
 .icon-container {
