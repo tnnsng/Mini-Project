@@ -119,20 +119,6 @@ const ChooseRoom = () => {
                     </button>
                   </td>
                 </tr>
-                <tr>
-                  <td>2</td>
-                  <td>ห้องประชุม B</td>
-                  <td>ชั้น 1</td>
-                  <td>ตึก B</td>
-                  <td>ทั่วไป</td>
-                  <td>ว่าง</td>
-                  <td>-</td>
-                  <td>
-                    <button className="px-2 py-2 bg-red-900 text-sm text-white text-center rounded-2xl hover:bg-red-700">
-                      รายละเอียด
-                    </button>
-                  </td>
-                </tr>
               </tbody>
             </table>
           </div>

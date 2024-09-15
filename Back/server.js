@@ -36,13 +36,13 @@ async function getDbConnection() {
   }
 }
 
-app.get("/emp", async (req, res) => {
+app.get("/dep", async (req, res) => {
   let connection;
   try {
     connection = await getDbConnection();
 
     // ดึงข้อมูลจากตาราง EMPLOYEE
-    const result = await connection.execute("SELECT * FROM EMPLOYEE");
+    const result = await connection.execute("SELECT * FROM DEPARTMENT");
 
     // กำหนดชื่อคอลัมน์ (header) จาก metadata ของคอลัมน์ใน result
     const headers = result.metaData.map((col) => col.name);
