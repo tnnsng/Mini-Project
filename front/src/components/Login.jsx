@@ -32,7 +32,7 @@ function Login() {
               </h1>
               <form onSubmit={handleLogin}>
                 <div className="mb-4 relative">
-                  <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600" />
+                  <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
                   <input
                     type="text"
                     name="username"
@@ -42,7 +42,7 @@ function Login() {
                   />
                 </div>
                 <div className="mb-6 relative">
-                  <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600" />
+                  <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
                   <input
                     type="password"
                     name="password"
