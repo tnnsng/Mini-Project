@@ -1,9 +1,6 @@
-import { useState } from "react";
 import { FaSearch } from "react-icons/fa"; // ไอคอนค้นหา
 
 const ChooseRoom = () => {
-  const [roomType, setRoomType] = useState("");
-
   return (
     <div className="p-8 bg-white text-gray-800 min-h-screen">
       <h1 className="text-3xl font-bold mb-8">จองห้องประชุม</h1>
@@ -11,31 +8,16 @@ const ChooseRoom = () => {
       <div className="grid md:gid-cols-1 lg:grid-cols-[30%,70%] gap-8">
         {/* ฝั่งซ้าย - Dropdown ต่างๆ */}
         <div className="space-y-6">
-          {/* ประเภทห้อง - เปลี่ยนเป็นปุ่ม */}
+          {/* ประเภทห้อง */}
           <div>
             <label className="block text-lg font-medium mb-2">ประเภทห้อง</label>
-            <div className="flex space-x-4">
-              <button
-                className={`px-4 py-2 border-2 rounded-xl text-lg ${
-                  roomType === "ทั่วไป"
-                    ? "bg-red-900 text-white"
-                    : "text-red-900 border-red-900"
-                }`}
-                onClick={() => setRoomType("ทั่วไป")}
-              >
-                ห้องทั่วไป
-              </button>
-              <button
-                className={`px-4 py-2 border-2 rounded-xl text-lg ${
-                  roomType === "VIP"
-                    ? "bg-red-900 text-white"
-                    : "text-red-900 border-red-900"
-                }`}
-                onClick={() => setRoomType("VIP")}
-              >
-                ห้อง VIP
-              </button>
-            </div>
+            <select className="select select-bordered rounded-2xl w-full bg-white border-2 border-red-900">
+              <option disabled value="">
+                เลือกประเภทห้อง
+              </option>
+              <option value="A">ห้องทั่วไป</option>
+              <option value="B">ห้อง VIP</option>
+            </select>
           </div>
 
           {/* ตึก */}
