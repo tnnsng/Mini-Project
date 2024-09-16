@@ -16,8 +16,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 60px; /* Adjust size as needed */
-  height: 60px; /* Adjust size as needed */
+  width: 50px; /* Adjust size as needed */
+  height: 50px; /* Adjust size as needed */
   border-radius: 50%; /* Makes the container circular */
   background-color: #fff; /* Background color for the circle */
   color: #333; /* Color for the icon */

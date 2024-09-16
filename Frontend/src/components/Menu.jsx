@@ -16,17 +16,17 @@ const Menu = () => {
 
       <div className="controls flex flex-col flex-grow">
         <ul className="menu flex-grow">
-          <div className="menu-item flex items-center justify-start pl-4 p-3 cursor-pointer hover:bg-red-800 text-md">
+          <div className="menu-item flex items-center justify-start pl-4 p-3 cursor-pointer hover:bg-red-800 text-lg">
             <FaStore className="mr-2" /> หน้าหลัก
           </div>
 
-          <div className="menu-item flex items-center justify-start pl-4 p-3 cursor-pointer hover:bg-red-800 text-md">
+          <div className="menu-item flex items-center justify-start pl-4 p-3 cursor-pointer hover:bg-red-800 text-lg">
             <FaCalendarAlt className="mr-2" /> จองห้อง
             {/* Changed icon and label */}
           </div>
         </ul>
-        <button className="logout-btn flex items-center justify-start pl-4 p-3 cursor-pointer hover:bg-red-800 text-md w-full  mt-auto">
-          <FaSignOutAlt className="mr-2" /> Logout
+        <button className="logout-btn flex items-center justify-start pl-4 p-3 cursor-pointer hover:bg-red-800 text-lg w-full mt-auto">
+          <FaSignOutAlt className="mr-2" /> ออกจากระบบ
         </button>
       </div>
     </div>
