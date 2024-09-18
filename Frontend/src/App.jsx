@@ -1,7 +1,7 @@
 import "./App.css";
 import Menu from "./components/Menu";
-//import BookRoom from "./components/BookRoom";
-import ChooseRoom from "./components/ChooseRoom";
+import BookRoom from "./components/BookRoom";
+//import ChooseRoom from "./components/ChooseRoom";
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
       <main
         className={`flex-grow h-full pl-52 bg-whie text-white overflow-y-auto`} // เพิ่ม overflow-y-auto เมื่ออยู่ในหน้าที่กำหนด
       >
-        <ChooseRoom />
+        <BookRoom />
       </main>
     </div>
   );
