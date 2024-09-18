@@ -60,9 +60,9 @@ const ChooseRoom = () => {
               onChange={(e) => setRoomType(e.target.value)}
             >
               <option value="">เลือกจำนวนการบรรจุ</option>
-              <option value="5">4-5 คน</option>
-              <option value="6">6-10 คน</option>
-              <option value="5">10-20 คน</option>
+              <option value="5">6 คน</option>
+              <option value="6">10 คน</option>
+              <option value="5">20 คน</option>
             </select>
           </div>
 
@@ -139,10 +139,11 @@ const ChooseRoom = () => {
                 <thead className="text-gray-800 text-lg text-center">
                   <tr>
                     <th>No.</th>
-                    <th>ชื่อห้อง</th>
+                    <th>ห้อง</th>
                     <th>ชั้น</th>
                     <th>ตึก</th>
                     <th>ประเภทห้อง</th>
+                    <th>บรรจุ</th>
                     <th>สถานะห้อง</th>
                     <th>รายละเอียด</th>
                   </tr>

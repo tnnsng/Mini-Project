@@ -23,6 +23,17 @@
   color: #333; /* Color for the icon */
 }
 
+.back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px; /* Adjust size as needed */
+  height: 50px; /* Adjust size as needed */
+  border-radius: 50%; /* Makes the container circular */
+  background-color: rgb(127 29 29); /* Background color for the circle */
+  color: white; /* Color for the icon */
+}
+
 .user-info {
   display: flex;
   align-items: center;
