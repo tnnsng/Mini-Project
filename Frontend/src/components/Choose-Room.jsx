@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { FaSearch } from "react-icons/fa"; // ไอคอนค้นหา
 import axios from "axios";
 
@@ -46,14 +47,16 @@ const ChooseRoom = () => {
 
   return (
     <div className="p-8 bg-white text-gray-800 min-h-screen">
-      <h1 className="text-3xl font-bold mb-8">ห้องประชุม</h1>
+      <h1 className="text-3xl mb-8">ห้องประชุม</h1>
 
       <div className="grid md:grid-cols-1 lg:grid-cols-[30%,70%] gap-8">
         {/* ฝั่งซ้าย - Dropdown ต่างๆ */}
         <div className="space-y-6">
           {/* จำนวนคน */}
           <div>
-            <label className="block text-lg font-medium mb-2">จำนวนการบรรจุ</label>
+            <label className="block text-lg font-medium mb-2">
+              จำนวนการบรรจุ
+            </label>
             <select
               className="select select-bordered rounded-2xl w-full bg-white border-2 border-red-900"
               value={roomType}
@@ -111,9 +114,10 @@ const ChooseRoom = () => {
           </div>
 
           <div className="flex justify-end">
-            <button className="bg-red-900 text-xl text-center text-white py-2 px-6 rounded-xl hover:bg-red-950">เลือกห้อง</button>
+            <button className="bg-red-900 text-xl text-center text-white py-2 px-6 rounded-xl hover:bg-red-950">
+              <Link to={"booking-room"}>เลือกห้อง</Link>
+            </button>
           </div>
-
         </div>
 
         {/* ฝั่งขวา - ตารางแสดงห้องที่ตรงกับตัวเลือก */}
@@ -149,7 +153,11 @@ const ChooseRoom = () => {
                   </tr>
                 </thead>
                 <tbody className="text-center text-md">
-                  {(filteredRooms.length > 0 || searchQuery || roomType || building || floor) ? (
+                  {filteredRooms.length > 0 ||
+                  searchQuery ||
+                  roomType ||
+                  building ||
+                  floor ? (
                     filteredRooms.length > 0 ? (
                       filteredRooms.map((room, index) => (
                         <tr key={room.id}>

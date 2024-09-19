@@ -1,13 +1,25 @@
-import { FaStore, FaUser, FaCalendarAlt, FaSignOutAlt } from "react-icons/fa"; // Added Logout icon
-//import { Link } from "react-router-dom";
+import {
+  FaUser,
+  FaSignOutAlt,
+  FaClipboardList,
+  FaBuilding,
+  FaUserLock,
+  FaCheck,
+  FaUserShield,
+  FaUsersCog,
+  FaUserTag,
+  FaDoorClosed,
+} from "react-icons/fa"; // Added new icons
+import { IoHome } from "react-icons/io5";
+import { BiSolidReport } from "react-icons/bi";
+import { Link } from "react-router-dom";
 
 const Menu = () => {
   return (
-    <div className="dashboard w-52 h-screen bg-red-900 text-white flex flex-col overflow-y-auto">
+    <div className="menu w-52 h-screen bg-red-900 text-white flex flex-col overflow-y-auto">
       <div className="user-info p-4 flex items-center border-b border-white">
         <div className="icon-container flex items-center justify-center mr-4">
-          {/* Container for the icon */}
-          <FaUser className="text-3xl text-red-900" /> {/* User icon */}
+          <FaUser className="text-3xl text-red-900" />
         </div>
         <div className="user-details flex flex-col">
           <h2 className="text-lg">User</h2>
@@ -17,17 +29,93 @@ const Menu = () => {
 
       <div className="controls flex flex-col flex-grow">
         <ul className="menu flex-grow">
-          <div className="menu-item flex items-center justify-start pl-4 p-3 cursor-pointer hover:bg-red-800 text-lg">
-            <FaStore className="mr-2" /> หน้าหลัก
-          </div>
+          <Link
+            to={"/main/choose-room"}
+            className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-md"
+          >
+            <IoHome className="mr-2" /> Home
+          </Link>
 
-          <div className="menu-item flex items-center justify-start pl-4 p-3 cursor-pointer hover:bg-red-800 text-lg">
-            <FaCalendarAlt className="mr-2" /> จองห้อง
-            {/* Changed icon and label */}
-          </div>
+          <Link
+            to={"/main/booking-history"}
+            className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-md"
+          >
+            <FaClipboardList className="mr-2" /> Booking History
+          </Link>
+
+          <Link
+            to={"/main/manage-room"}
+            className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-md"
+          >
+            <FaDoorClosed className="mr-2" /> Manage Room
+          </Link>
+
+          <Link
+            to={"/main/manage-building"}
+            className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-md"
+          >
+            <FaBuilding className="mr-2" /> Manage Building
+          </Link>
+
+          <Link
+            to={"/main/manage-floor"}
+            className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-md"
+          >
+            <FaBuilding className="mr-2" /> Manage Floor
+          </Link>
+
+          <Link
+            to={"/main/manage-user"}
+            className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-md"
+          >
+            <FaUsersCog className="mr-2" /> Manage User
+          </Link>
+
+          <Link
+            to={"/main/unlock-user"}
+            className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-md"
+          >
+            <FaUserLock className="mr-2" /> Unlock User
+          </Link>
+
+          <Link
+            to={"/main/approve-booking"}
+            className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-md"
+          >
+            <FaCheck className="mr-2" /> Approve Booking
+          </Link>
+
+          <Link
+            to={"/main/manage-permission"}
+            className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-md"
+          >
+            <FaUserShield className="mr-2" /> Manage Permission
+          </Link>
+
+          <Link
+            to={"/main/manage-department"}
+            className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-md"
+          >
+            <FaUsersCog className="mr-2" /> Manage Department
+          </Link>
+
+          <Link
+            to={"/main/manage-position"}
+            className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-md"
+          >
+            <FaUserTag className="mr-2" /> Manage Position
+          </Link>
+
+          <Link
+            to={"/main/manage-report"}
+            className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-md"
+          >
+            <BiSolidReport className="mr-2" /> Report
+          </Link>
         </ul>
-        <button className="logout-btn flex items-center justify-start pl-4 p-3 cursor-pointer hover:bg-red-800 text-lg w-full mt-auto">
-          <FaSignOutAlt className="mr-2" /> ออกจากระบบ
+        <button className="logout-btn flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-lg w-full mt-auto">
+          <FaSignOutAlt className="mr-2" />
+          <Link to={"/"}> Logout</Link>
         </button>
       </div>
     </div>

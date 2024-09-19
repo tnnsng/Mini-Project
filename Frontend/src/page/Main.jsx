@@ -1,9 +1,9 @@
-import "./App.css";
-import Menu from "./components/Menu";
-import BookRoom from "./components/BookRoom";
-//import ChooseRoom from "./components/ChooseRoom";
+import { Routes, Route } from "react-router-dom";
+import Menu from "../components/Menu";
+import BookingRoom from "../components/Booking-Room";
+import ChooseRoom from "../components/Choose-Room";
 
-function App() {
+function Main() {
   return (
     <div className="h-screen flex transition-all duration-300 overflow-hidden">
       <aside
@@ -16,10 +16,13 @@ function App() {
       <main
         className={`flex-grow h-full pl-52 bg-whie text-white overflow-y-auto`} // เพิ่ม overflow-y-auto เมื่ออยู่ในหน้าที่กำหนด
       >
-        <BookRoom />
+        <Routes>
+          <Route path="choose-room" element={<ChooseRoom />} />
+          <Route path="choose-room/booking-room" element={<BookingRoom />} />
+        </Routes>
       </main>
     </div>
   );
 }
 
-export default App;
+export default Main;

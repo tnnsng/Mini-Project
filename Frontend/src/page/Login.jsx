@@ -1,4 +1,5 @@
 import { FaUser, FaLock } from "react-icons/fa"; // ใช้ไอคอนจาก react-icons
+import { Link } from "react-router-dom";
 
 function Login() {
   // ฟังก์ชัน handleLogin
@@ -55,7 +56,7 @@ function Login() {
                   type="submit"
                   className="btn border-red-900 bg-red-900 text-white py-2 px-4 text-xl font-normal w-auto rounded-2xl hover:bg-red-950 float-right"
                 >
-                  Login
+                  <Link to={"/main/choose-room"}>Login</Link>
                 </button>
               </form>
             </div>
