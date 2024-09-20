@@ -3,7 +3,6 @@ const cors = require("cors");
 const oracledb = require("oracledb");
 const bodyParser = require("body-parser");
 const app = express();
-app.use(bodyParser.json());
 const { readdirSync } = require("fs");
 
 
@@ -18,11 +17,10 @@ try {
   console.error("Whoops! Error initializing Oracle Client:", err);
   process.exit(1);
 }
-// Middleware
+
 app.use(cors());
 app.use(express.json());
-
-// Function to get a database connection
+app.use(bodyParser.json());
 
 readdirSync("./Routes").map((r) => app.use("/", require("./Routes/" + r)));
 
