@@ -14,14 +14,21 @@ async function getDbConnection() {
   }
 }
 
-
 router.get("/room", async (req, res) => {
   let connection;
   try {
     connection = await getDbConnection();
 
-    // ดึงข้อมูลจากตาราง 
-    const result = await connection.execute("SELECT * FROM room");
+    // ดึงข้อมูลจากตาราง
+    const result = await connection.execute(
+      `SELECT r.room_id, r.room_name, r.amount, r.detail, b.build_name, f.floor_name, t.type_name, s.stroom_name, e.fname, e.lname
+      FROM room r
+      JOIN build b ON b.build_id = r.build_id
+      JOIN floor f ON f.floor_id = r.floor_id
+      JOIN type t ON t.type_id = r.type_id
+      JOIN statusroom s ON s.stroom_id = r.stroom_id
+      JOIN employee e ON e.emp_id = r.emp_id`
+    );
 
     // กำหนดชื่อคอลัมน์ (header) จาก metadata ของคอลัมน์ใน result
     const headers = result.metaData.map((col) => col.name);
