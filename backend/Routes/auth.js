@@ -61,7 +61,7 @@ router.post("/login", async (req, res) => {
     const user = rows[0];
     const payload = {
       user: {
-        fname: user.FNAMME,
+        fname: user.FNAME,
         lname: user.LNAME,
         posi_id: user.POSI_ID,
         posi_name: user.POSI_NAME,
