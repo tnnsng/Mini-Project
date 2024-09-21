@@ -98,7 +98,9 @@ router.put("/build", async (req, res) => {
 
     // ตรวจสอบว่ามีข้อมูลที่จำเป็นหรือไม่
     if (!build_id || !build_name) {
-      return res.status(400).json({ error: "build_id and build_name are required" });
+      return res
+        .status(400)
+        .json({ error: "build_id and build_name are required" });
     }
 
     connection = await getDbConnection();
@@ -137,7 +139,6 @@ router.put("/build", async (req, res) => {
     }
   }
 });
-
 
 router.delete("/build/:id", async (req, res) => {
   let connection;

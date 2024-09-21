@@ -21,7 +21,18 @@ router.get("/room", async (req, res) => {
 
     // ดึงข้อมูลจากตาราง
     const result = await connection.execute(
-      `SELECT r.room_id, r.room_name, r.amount, r.detail, b.build_name, f.floor_name, t.type_name, s.stroom_name, e.fname, e.lname
+      `SELECT r.room_id, 
+              r.room_name, 
+              r.amount, 
+              r.detail, 
+              b.build_id,
+              b.build_name,
+              f.floor_id, 
+              f.floor_name, 
+              t.type_name, 
+              s.stroom_name, 
+              e.fname, 
+              e.lname
       FROM room r
       JOIN build b ON b.build_id = r.build_id
       JOIN floor f ON f.floor_id = r.floor_id
