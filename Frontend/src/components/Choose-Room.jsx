@@ -72,7 +72,9 @@ const ChooseRoom = () => {
     const matchesBuilding = selectedBuild
       ? room.BUILD_ID === selectedBuild
       : true;
-    const matchesFloor = selectedFloor ? room.FLOOR_ID === selectedFloor : true;
+    const matchesFloor = selectedFloor
+      ? room.FLOOR_NAME === selectedFloor
+      : true;
     const matchesAmount = selectedAmount
       ? room.AMOUNT === parseInt(selectedAmount, 10) // แปลง selectedAmount เป็น int
       : true;
@@ -163,7 +165,7 @@ const ChooseRoom = () => {
             >
               <option value="">เลือกชั้น</option>
               {uniqueFloors.map((floor, index) => (
-                <option key={index} value={floor.FLOOR_ID}>
+                <option key={index} value={floor.FLOOR_NAME}>
                   {floor.FLOOR_NAME}
                 </option>
               ))}
