@@ -85,6 +85,7 @@ router.post("/room", async (req, res) => {
       emp_id,
     } = req.body;
 
+    // Validate input data
     if (
       !room_id ||
       !room_name ||
@@ -100,7 +101,8 @@ router.post("/room", async (req, res) => {
 
     connection = await getDbConnection();
 
-    const [result] = await connection.execute(
+    // Execute the query
+    const result = await connection.execute(
       `INSERT INTO room (room_id, room_name, amount, detail, build_id, floor_id, type_id, stroom_id, emp_id)
       VALUES (:room_id, :room_name, :amount, :detail, :build_id, :floor_id, :type_id, :stroom_id, :emp_id)`,
       {
@@ -116,12 +118,13 @@ router.post("/room", async (req, res) => {
       }
     );
 
+    // If result is not an array, access affectedRows or insertId directly
+    const affectedRows = result.affectedRows || 0; // Adjust according to your database library
+
     await connection.commit();
 
     // Respond with success
-    res
-      .status(201)
-      .json({ message: "Room created successfully", roomId: room_id });
+    res.status(201).json({ message: "Room created successfully", roomId: room_id });
   } catch (err) {
     console.error("Error executing query", err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -170,7 +173,8 @@ router.put("/room/:id", async (req, res) => {
 
     connection = await getDbConnection();
 
-    const [result] = await connection.execute(
+    // Execute the update query
+    const result = await connection.execute(
       `UPDATE room SET 
         room_name = :room_name, 
         amount = :amount, 
@@ -193,16 +197,16 @@ router.put("/room/:id", async (req, res) => {
         emp_id,
       }
     );
+    await connection.commit();
+    // เข้าถึง affected rows ให้ถูกต้อง
 
-    // Check if any row was updated
-    if (result.affectedRows === 0) {
+    const affectedRows = result.rowsAffected;
+
+    if (affectedRows === 0) {
       return res.status(404).json({ error: "Room not found" });
     }
 
-    // Commit changes
-    await connection.commit();
-
-    // Respond with success
+    // ส่งผลลัพธ์กลับ
     res.status(200).json({ message: "Room updated successfully" });
   } catch (err) {
     console.error("Error executing query", err);
@@ -229,17 +233,19 @@ router.delete("/room/:id", async (req, res) => {
 
     connection = await getDbConnection();
 
-    const [result] = await connection.execute(
+    const result = await connection.execute(
       `DELETE FROM room WHERE room_id = :room_id`,
       { room_id: id }
     );
+    
+    await connection.commit();
+    // Access rowsAffected directly from the result
+    const affectedRows = result.rowsAffected;
 
-    // ตรวจสอบว่ามีการลบข้อมูลหรือไม่
-    if (result.affectedRows === 0) {
+    if (affectedRows === 0) {
       return res.status(404).json({ error: "Room not found" });
     }
 
-    // ส่งผลลัพธ์กลับ
     res.status(200).json({ message: "Room deleted successfully" });
   } catch (err) {
     console.error("Error executing query", err);
