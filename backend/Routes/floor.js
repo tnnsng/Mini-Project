@@ -14,14 +14,13 @@ async function getDbConnection() {
   }
 }
 
-
 router.get("/floor", async (req, res) => {
   let connection;
   try {
     connection = await getDbConnection();
 
-    // ดึงข้อมูลจากตาราง 
-    const result = await connection.execute("SELECT * FROM floor");
+    // ดึงข้อมูลจากตาราง EMPLOYEE
+    const result = await connection.execute("SELECT * FROM FLOOR");
 
     // กำหนดชื่อคอลัมน์ (header) จาก metadata ของคอลัมน์ใน result
     const headers = result.metaData.map((col) => col.name);

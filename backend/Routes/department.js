@@ -20,7 +20,7 @@ router.get("/dep", async (req, res) => {
   try {
     connection = await getDbConnection();
 
-    // ดึงข้อมูลจากตาราง 
+    // ดึงข้อมูลจากตาราง EMPLOYEE
     const result = await connection.execute("SELECT * FROM DEPARTMENT");
 
     // กำหนดชื่อคอลัมน์ (header) จาก metadata ของคอลัมน์ใน result

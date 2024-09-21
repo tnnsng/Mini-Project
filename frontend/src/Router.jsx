@@ -7,6 +7,7 @@ import Login from "./page/Login.jsx";
 import ChooseRoom from "./components/Choose-Room.jsx";
 import BookingRoom from "./components/Booking-Room.jsx";
 import BookingDetail from "./components/Booking-Detail.jsx";
+import Report from "./components/Report.jsx";
 
 import "./index.css";
 
@@ -28,10 +29,14 @@ const routes = [
             element: <BookingRoom />,
           },
           {
-            path: "booking-detail",
+            path: "booking-detail/:roomName",
             element: <BookingDetail />,
           },
         ],
+      },
+      {
+        path: "report",
+        element: <Report />,
       },
     ],
   },

@@ -26,11 +26,16 @@ router.post("/login", async (req, res) => {
         .status(400)
         .json({ error: "Username and password are required" });
     }
-
+    console.log(username);
+    console.log(password);
     connection = await getDbConnection();
 
     // ตรวจสอบข้อมูลผู้ใช้ในฐานข้อมูล
-    const query = "SELECT * FROM employee WHERE username = ? AND password = ?";
+    const query = `SELECT employee.*, position.POSI_NAME 
+                   FROM employee 
+                   JOIN position ON employee.posi_id = position.posi_id 
+                   WHERE employee.username = ? 
+                   AND employee.password = ?`;
     const [results] = await connection.execute(query, [username, password]);
 
     if (results.length === 0) {
@@ -42,12 +47,15 @@ router.post("/login", async (req, res) => {
         fname: user.fname,
         lname: user.lname,
         posi_id: user.posi_id,
+        posi_name: user.posi_name,
       },
     };
     jwt.sign(payload, "jwtsecret", { expiresIn: "1h" }, (err, token) => {
       if (err) throw err;
-        // ถ้าผู้ใช้ล็อกอินสำเร็จ
-      return res.status(200).json({ message: "Login successful", token, payload });
+      // ถ้าผู้ใช้ล็อกอินสำเร็จ
+      return res
+        .status(200)
+        .json({ message: "Login successful", token, payload });
     });
   } catch (err) {
     console.error("Error executing query", err);
