@@ -14,32 +14,18 @@ async function getDbConnection() {
   }
 }
 
-router.get("/room", async (req, res) => {
+router.get("/booking", async (req, res) => {
   let connection;
   try {
     connection = await getDbConnection();
 
-    // ดึงข้อมูลจากตาราง
+    // ดึงข้อมูลจากตาราง 
     const result = await connection.execute(
-      `SELECT r.room_id, 
-              r.room_name, 
-              r.amount, 
-              r.detail, 
-              b.build_id,
-              b.build_name, 
-              f.floor_id,
-              f.floor_name,
-              r.type_id,
-              t.type_name, 
-              s.stroom_name, 
-              e.fname, 
-              e.lname
-      FROM room r
-      JOIN build b ON b.build_id = r.build_id
-      JOIN floor f ON f.floor_id = r.floor_id
-      JOIN type t ON t.type_id = r.type_id
-      JOIN statusroom s ON s.stroom_id = r.stroom_id
-      JOIN employee e ON e.emp_id = r.emp_id`
+      `SELECT book_id, book_date, startdate, enddate, r.room_name, app.app_name, emp.fname, emp.lname 
+        FROM BOOKING b
+        JOIN room r ON r.room_id = b.room_id
+        JOIN statusapproved app ON app.app_id = b.app_id
+        JOIN employee emp ON emp.emp_id = b.emp_id`
     );
 
     // กำหนดชื่อคอลัมน์ (header) จาก metadata ของคอลัมน์ใน result
