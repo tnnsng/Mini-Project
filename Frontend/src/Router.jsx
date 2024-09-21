@@ -29,7 +29,7 @@ const routes = [
             element: <BookingRoom />,
           },
           {
-            path: "booking-detail",
+            path: "booking-detail/:roomName",
             element: <BookingDetail />,
           },
         ],

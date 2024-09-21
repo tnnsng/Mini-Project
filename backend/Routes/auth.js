@@ -26,15 +26,16 @@ router.post("/login", async (req, res) => {
         .status(400)
         .json({ error: "Username and password are required" });
     }
-
+    console.log(username);
+    console.log(password);
     connection = await getDbConnection();
 
     // ตรวจสอบข้อมูลผู้ใช้ในฐานข้อมูล
     const query = `SELECT employee.*, position.POSI_NAME 
                    FROM employee 
                    JOIN position ON employee.posi_id = position.posi_id 
-                   WHERE employee.username = 'user01' 
-                   AND employee.password = '123456'`;
+                   WHERE employee.username = ? 
+                   AND employee.password = ?`;
     const [results] = await connection.execute(query, [username, password]);
 
     if (results.length === 0) {

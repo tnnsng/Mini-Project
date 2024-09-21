@@ -82,7 +82,11 @@ const ChooseRoom = () => {
     // ตรวจสอบค่าช่องค้นหา
     const matchesSearch = searchQuery
       ? room.ROOM_NAME.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        room.DETAIL.toLowerCase().includes(searchQuery.toLowerCase())
+        room.DETAIL.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        room.TYPE_NAME.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        room.BUILD_NAME.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        room.FLOOR_NAME.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        String(room.AMOUNT).toLowerCase().includes(searchQuery.toLowerCase())
       : true;
 
     // Return เงื่อนไขการกรอง
@@ -99,7 +103,7 @@ const ChooseRoom = () => {
     <div className="p-8 bg-white text-gray-800 min-h-screen">
       <h1 className="text-3xl mb-8">ห้องประชุม</h1>
 
-      <div className="grid md:grid-cols-1 lg:grid-cols-[30%,70%] gap-8">
+      <div className="grid md:grid-cols-1 lg:grid-cols-[20%,80%] gap-8">
         {/* ฝั่งซ้าย - Dropdown ต่างๆ */}
         <div className="space-y-6">
           {/* จำนวนคน */}
@@ -171,12 +175,6 @@ const ChooseRoom = () => {
               ))}
             </select>
           </div>
-
-          <div className="flex justify-end">
-            <button className="bg-red-900 text-xl text-center text-white py-2 px-6 rounded-xl hover:bg-red-950">
-              <Link to={"booking-room"}>เลือกห้อง</Link>
-            </button>
-          </div>
         </div>
 
         {/* ฝั่งขวา - ตารางแสดงห้องที่ตรงกับตัวเลือก */}
@@ -206,6 +204,7 @@ const ChooseRoom = () => {
                   <th>Amount</th>
                   <th>Status</th>
                   <th className="text-left">Detail</th>
+                  <th>Booking Detail</th>
                 </tr>
               </thead>
               <tbody>
@@ -223,6 +222,13 @@ const ChooseRoom = () => {
                       <td>{room.AMOUNT}</td>
                       <td>{room.STROOM_NAME}</td>
                       <td className="text-left">{room.DETAIL}</td>
+                      <td>
+                        <button className="bg-red-900 px-4 py-2 text-white hover:bg-red-950 rounded-xl">
+                          <Link to={`booking-detail/${room.ROOM_NAME}`}>
+                            Details
+                          </Link>
+                        </button>
+                      </td>
                     </tr>
                   ))
                 ) : (

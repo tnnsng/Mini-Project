@@ -14,14 +14,16 @@ async function getDbConnection() {
   }
 }
 
+const moment = require("moment-timezone");
+
 router.get("/booking", async (req, res) => {
   let connection;
   try {
     connection = await getDbConnection();
 
-    // ดึงข้อมูลจากตาราง 
+    // ดึงข้อมูลจากตาราง
     const result = await connection.execute(
-      `SELECT book_id, book_date, startdate, enddate, r.room_name, app.app_name, emp.fname, emp.lname 
+      `SELECT book_id, book_date, startdate, enddate, r.room_id, r.room_name, app.app_name, emp.fname, emp.lname 
         FROM BOOKING b
         JOIN room r ON r.room_id = b.room_id
         JOIN statusapproved app ON app.app_id = b.app_id
@@ -37,6 +39,15 @@ router.get("/booking", async (req, res) => {
       row.forEach((cell, index) => {
         rowData[headers[index]] = cell;
       });
+
+      // แปลง startdate และ enddate เป็นเขตเวลา Bangkok
+      rowData.STARTDATE = moment(rowData.STARTDATE)
+        .tz("Asia/Bangkok")
+        .format("DD-MM-YYYY HH:mm");
+      rowData.ENDDATE = moment(rowData.ENDDATE)
+        .tz("Asia/Bangkok")
+        .format("DD-MM-YYYY HH:mm");
+
       return rowData;
     });
 

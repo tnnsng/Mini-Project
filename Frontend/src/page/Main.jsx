@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Menu from "../components/Menu";
 import BookingRoom from "../components/Booking-Room";
+import BookingDetail from "../components/Booking-Detail";
 import ChooseRoom from "../components/Choose-Room";
 import BookingHistory from "../components/Booking-History";
 import Report from "../components/Report";
@@ -21,6 +22,10 @@ function Main() {
         <Routes>
           <Route path="choose-room" element={<ChooseRoom />} />
           <Route path="choose-room/booking-room" element={<BookingRoom />} />
+          <Route
+            path="choose-room/booking-detail/:roomName"
+            element={<BookingDetail />}
+          />
           <Route path="booking-history" element={<BookingHistory />} />
           <Route path="report" element={<Report />} />
         </Routes>

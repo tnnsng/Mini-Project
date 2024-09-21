@@ -1,11 +1,60 @@
 import { FaUser, FaLock } from "react-icons/fa"; // ใช้ไอคอนจาก react-icons
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 function Login() {
-  // ฟังก์ชัน handleLogin
-  const handleLogin = (event) => {
-    event.preventDefault();
-    // การจัดการการเข้าสู่ระบบที่นี่
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:5000/login", {
+        username,
+        password,
+      });
+
+      // เมื่อการล็อกอินสำเร็จ
+      if (response.data.status === "ok") {
+        const { token, Employee_ID, Employee_Name, Role_Name } = response.data;
+
+        if (token && Employee_ID && Employee_Name && Role_Name) {
+          // เก็บข้อมูลใน localStorage
+          localStorage.setItem("token", token);
+          localStorage.setItem("Employee_ID", Employee_ID);
+          localStorage.setItem("Employee_Name", Employee_Name);
+          localStorage.setItem("Role_Name", Role_Name);
+
+          Swal.fire({
+            icon: "success",
+            title: "Login Successful!",
+            text: `WELCOME : ${Employee_Name}`,
+            confirmButtonText: "OK",
+          }).then(() => {
+            navigate("/main"); // นำทางไปหน้า /main
+          });
+        } else {
+          throw new Error("Missing data from the server");
+        }
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: response.data.message,
+          confirmButtonText: "Try Again",
+        });
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "An error occurred during Login",
+      });
+    }
   };
 
   return (
@@ -38,6 +87,8 @@ function Login() {
                     type="text"
                     name="username"
                     id="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     className="input input-bordered rounded-2xl w-full mt-1 pl-10 bg-white text-gray-800"
                     placeholder="Username"
                   />
@@ -48,6 +99,8 @@ function Login() {
                     type="password"
                     name="password"
                     id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="input rounded-2xl w-full mt-1 pl-10 bg-white text-gray-800"
                     placeholder="Password"
                   />
