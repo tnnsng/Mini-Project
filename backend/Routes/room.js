@@ -70,4 +70,191 @@ router.get("/room", async (req, res) => {
   }
 });
 
+router.post("/room", async (req, res) => {
+  let connection;
+  try {
+    const {
+      room_id,
+      room_name,
+      amount,
+      detail,
+      build_id,
+      floor_id,
+      type_id,
+      stroom_id,
+      emp_id,
+    } = req.body;
+
+    if (
+      !room_id ||
+      !room_name ||
+      !amount ||
+      !build_id ||
+      !floor_id ||
+      !type_id ||
+      !stroom_id ||
+      !emp_id
+    ) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    connection = await getDbConnection();
+
+    const [result] = await connection.execute(
+      `INSERT INTO room (room_id, room_name, amount, detail, build_id, floor_id, type_id, stroom_id, emp_id)
+      VALUES (:room_id, :room_name, :amount, :detail, :build_id, :floor_id, :type_id, :stroom_id, :emp_id)`,
+      {
+        room_id,
+        room_name,
+        amount,
+        detail,
+        build_id,
+        floor_id,
+        type_id,
+        stroom_id,
+        emp_id,
+      }
+    );
+
+    await connection.commit();
+
+    // Respond with success
+    res
+      .status(201)
+      .json({ message: "Room created successfully", roomId: room_id });
+  } catch (err) {
+    console.error("Error executing query", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error("Error closing connection", err);
+      }
+    }
+  }
+});
+
+router.put("/room/:id", async (req, res) => {
+  let connection;
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ error: "Id is required" });
+    }
+
+    const {
+      room_name,
+      amount,
+      detail,
+      build_id,
+      floor_id,
+      type_id,
+      stroom_id,
+      emp_id,
+    } = req.body;
+
+    if (
+      !room_name ||
+      !amount ||
+      !build_id ||
+      !floor_id ||
+      !type_id ||
+      !stroom_id ||
+      !emp_id
+    ) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    connection = await getDbConnection();
+
+    const [result] = await connection.execute(
+      `UPDATE room SET 
+        room_name = :room_name, 
+        amount = :amount, 
+        detail = :detail, 
+        build_id = :build_id, 
+        floor_id = :floor_id, 
+        type_id = :type_id, 
+        stroom_id = :stroom_id, 
+        emp_id = :emp_id 
+      WHERE room_id = :room_id`,
+      {
+        room_id: id,
+        room_name,
+        amount,
+        detail,
+        build_id,
+        floor_id,
+        type_id,
+        stroom_id,
+        emp_id,
+      }
+    );
+
+    // Check if any row was updated
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Room not found" });
+    }
+
+    // Commit changes
+    await connection.commit();
+
+    // Respond with success
+    res.status(200).json({ message: "Room updated successfully" });
+  } catch (err) {
+    console.error("Error executing query", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error("Error closing connection", err);
+      }
+    }
+  }
+});
+
+router.delete("/room/:id", async (req, res) => {
+  let connection;
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ error: "Id is required" });
+    }
+
+    connection = await getDbConnection();
+
+    const [result] = await connection.execute(
+      `DELETE FROM room WHERE room_id = :room_id`,
+      { room_id: id }
+    );
+
+    // ตรวจสอบว่ามีการลบข้อมูลหรือไม่
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Room not found" });
+    }
+
+    // ส่งผลลัพธ์กลับ
+    res.status(200).json({ message: "Room deleted successfully" });
+  } catch (err) {
+    console.error("Error executing query", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error("Error closing connection", err);
+      }
+    }
+  }
+});
+
+
+
 module.exports = router;
