@@ -21,11 +21,11 @@ const routes = [
     element: <Main />,
     children: [
       {
-        path: "choose-room/*",
+        path: "home/*",
         element: <ChooseRoom />,
         children: [
           {
-            path: "booking-room",
+            path: "booking-room/:roomName",
             element: <BookingRoom />,
           },
           {

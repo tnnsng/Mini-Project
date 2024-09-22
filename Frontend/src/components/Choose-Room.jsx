@@ -221,11 +221,23 @@ const ChooseRoom = () => {
                       <td>{room.TYPE_NAME}</td>
                       <td>{room.AMOUNT}</td>
                       <td>{room.STROOM_NAME}</td>
-                      <td className="text-left">{room.DETAIL}</td>
+                      <td className="text-left">
+                        {room.DETAIL.length > 10
+                          ? room.DETAIL.substring(0, 10) + "..."
+                          : room.DETAIL}
+                      </td>
                       <td>
-                        <button className="bg-red-900 px-4 py-2 text-white hover:bg-red-950 rounded-xl">
+                        <button
+                          className="bg-red-900 px-4 py-2 text-white hover:bg-red-950 rounded-xl"
+                          onClick={() => {
+                            localStorage.setItem(
+                              "selectedRoom",
+                              JSON.stringify(room)
+                            );
+                          }}
+                        >
                           <Link to={`booking-detail/${room.ROOM_NAME}`}>
-                            Details
+                            More Details
                           </Link>
                         </button>
                       </td>

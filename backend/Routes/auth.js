@@ -20,39 +20,59 @@ router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // ตรวจสอบข้อมูลก่อนดำเนินการ
+    // Validate input
     if (!username || !password) {
       return res
         .status(400)
         .json({ error: "Username and password are required" });
     }
+
     console.log(username);
     console.log(password);
+
     connection = await getDbConnection();
 
-    // ตรวจสอบข้อมูลผู้ใช้ในฐานข้อมูล
+    // Update query with Oracle bind variable syntax
     const query = `SELECT employee.*, position.POSI_NAME 
                    FROM employee 
                    JOIN position ON employee.posi_id = position.posi_id 
-                   WHERE employee.username = ? 
-                   AND employee.password = ?`;
-    const [results] = await connection.execute(query, [username, password]);
+                   WHERE employee.username = :username 
+                   AND employee.password = :password`;
 
-    if (results.length === 0) {
+    // Execute the query
+    const result = await connection.execute(query, { username, password });
+
+    // Access the rows correctly depending on your driver
+    const results = result.rows || result;
+    //console.log(results);
+    // กำหนดชื่อคอลัมน์ (header) จาก metadata ของคอลัมน์ใน result
+    const headers = result.metaData.map((col) => col.name);
+    // แปลงแถวข้อมูลเป็น JSON
+    const rows = result.rows.map((row) => {
+      let rowData = {};
+      row.forEach((cell, index) => {
+        rowData[headers[index]] = cell;
+      });
+      return rowData;
+    });
+    console.log(rows);
+    if (rows.length === 0) {
       return res.status(401).json({ error: "Invalid username or password" });
     }
-    const user = results[0];
+
+    const user = rows[0];
     const payload = {
       user: {
-        fname: user.fname,
-        lname: user.lname,
-        posi_id: user.posi_id,
-        posi_name: user.posi_name,
+        emp_id: user.EMP_ID,
+        fname: user.FNAME,
+        lname: user.LNAME,
+        posi_id: user.POSI_ID,
+        posi_name: user.POSI_NAME,
       },
     };
+
     jwt.sign(payload, "jwtsecret", { expiresIn: "1h" }, (err, token) => {
       if (err) throw err;
-      // ถ้าผู้ใช้ล็อกอินสำเร็จ
       return res
         .status(200)
         .json({ message: "Login successful", token, payload });

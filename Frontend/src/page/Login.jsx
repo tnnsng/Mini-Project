@@ -1,5 +1,5 @@
 import { FaUser, FaLock } from "react-icons/fa"; // ใช้ไอคอนจาก react-icons
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -18,23 +18,27 @@ function Login() {
       });
 
       // เมื่อการล็อกอินสำเร็จ
-      if (response.data.status === "ok") {
-        const { token, Employee_ID, Employee_Name, Role_Name } = response.data;
+      if (response.data.token) {
+        const { token } = response.data;
+        const { emp_id, fname, lname, posi_id, posi_name } =
+          response.data.payload.user;
 
-        if (token && Employee_ID && Employee_Name && Role_Name) {
+        if (token && emp_id && fname && lname && posi_id && posi_name) {
           // เก็บข้อมูลใน localStorage
           localStorage.setItem("token", token);
-          localStorage.setItem("Employee_ID", Employee_ID);
-          localStorage.setItem("Employee_Name", Employee_Name);
-          localStorage.setItem("Role_Name", Role_Name);
+          localStorage.setItem("emp_id", emp_id);
+          localStorage.setItem("fname", fname);
+          localStorage.setItem("lname", lname);
+          localStorage.setItem("posi_id", posi_id); // แก้ตรงนี้เพิ่ม posi_id
+          localStorage.setItem("posi_name", posi_name);
 
           Swal.fire({
             icon: "success",
             title: "Login Successful!",
-            text: `WELCOME : ${Employee_Name}`,
+            text: `WELCOME : ${fname} ${lname}`,
             confirmButtonText: "OK",
           }).then(() => {
-            navigate("/main"); // นำทางไปหน้า /main
+            navigate("/main/home");
           });
         } else {
           throw new Error("Missing data from the server");
@@ -109,7 +113,7 @@ function Login() {
                   type="submit"
                   className="btn border-red-900 bg-red-900 text-white py-2 px-4 text-xl font-normal w-auto rounded-2xl hover:bg-red-950 float-right"
                 >
-                  <Link to={"/main/choose-room"}>Login</Link>
+                  Login
                 </button>
               </form>
             </div>
