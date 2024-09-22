@@ -16,14 +16,12 @@ function Main() {
       </aside>
 
       {/* Main content area */}
-      <main
-        className={`flex-grow h-full pl-52 bg-whie text-white overflow-y-auto`} // เพิ่ม overflow-y-auto เมื่ออยู่ในหน้าที่กำหนด
-      >
+      <main className={"flex-grow h-full pl-52 bg-whie text-white"}>
         <Routes>
-          <Route path="choose-room" element={<ChooseRoom />} />
-          <Route path="choose-room/booking-room" element={<BookingRoom />} />
+          <Route path="home" element={<ChooseRoom />} />
+          <Route path="home/booking-room/:roomName" element={<BookingRoom />} />
           <Route
-            path="choose-room/booking-detail/:roomName"
+            path="home/booking-detail/:roomName"
             element={<BookingDetail />}
           />
           <Route path="booking-history" element={<BookingHistory />} />

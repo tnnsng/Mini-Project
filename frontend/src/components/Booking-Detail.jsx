@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FaAngleLeft } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaCalendarAlt } from "react-icons/fa";
 
 const BookingDetail = () => {
-  const { roomName } = useParams(); // รับ ROOM_ID จาก URL
+  const room = JSON.parse(localStorage.getItem("selectedRoom"));
 
   const [date, setDate] = useState("");
   const [booking, setBooking] = useState([]);
@@ -27,7 +27,9 @@ const BookingDetail = () => {
 
   const filteredBooking = booking.filter((booking) => {
     // ตรวจสอบค่าของ dropdown ที่ผู้ใช้เลือกทีละตัว
-    const matchesRoomBooking = roomName ? booking.ROOM_NAME === roomName : true;
+    const matchesRoomBooking = room.ROOM_NAME
+      ? booking.ROOM_NAME === room.ROOM_NAME
+      : true;
 
     // แปลง date ให้เป็นรูปแบบ DD-MM-YYYY
     const formattedDate = date
@@ -51,7 +53,7 @@ const BookingDetail = () => {
     <div className="p-8 bg-white text-gray-800 min-h-screen">
       <div className="flex items-center gap-6 mb-8">
         <button className="btn btn-circle bg-red-900 text-white border-red-900 hover:bg-red-950">
-          <Link to={"/main/choose-room"}>
+          <Link to={"/main/home"}>
             <FaAngleLeft className="text-4xl" />
           </Link>
         </button>
@@ -60,7 +62,8 @@ const BookingDetail = () => {
 
       <div className="flex items-center justify-between text-2xl text-gray-800 mb-4">
         <label className="relative">
-          <h1 className="text-6xl">{roomName}</h1>
+          <h1 className="text-6xl">{room.ROOM_NAME}</h1>
+          <h2 className="text-2xl">Detail : {room.DETAIL} </h2>
         </label>
 
         <div className="flex items-center justify-end relative w-1/3">
@@ -76,9 +79,9 @@ const BookingDetail = () => {
         </div>
       </div>
 
-      <div className="overflow-x-auto h-[calc(100vh-300px)] border border-gray-800">
+      <div className="overflow-x-auto h-[calc(100vh-350px)] border border-gray-800">
         <table className="table w-full">
-          <thead className="text-gray-600 text-lg text-center">
+          <thead className="text-gray-800 text-lg text-center">
             <tr>
               <th></th>
               <th>Start Date Time</th>
@@ -112,8 +115,8 @@ const BookingDetail = () => {
         </table>
       </div>
       <div className="flex justify-end p-4">
-        <button className="bg-red-900 border border-red-900 text-center text-white text-xl px-4 py-2 rounded-xl hover:bg-red-950">
-          Reserve
+        <button className="bg-red-900 border border-red-900 text-center text-white text-2xl px-4 py-2 rounded-2xl hover:bg-red-950">
+          <Link to={`/main/home/booking-room/${room.ROOM_NAME}`}>Reserve</Link>
         </button>
       </div>
     </div>

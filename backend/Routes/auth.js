@@ -22,12 +22,14 @@ router.post("/login", async (req, res) => {
 
     // Validate input
     if (!username || !password) {
-      return res.status(400).json({ error: "Username and password are required" });
+      return res
+        .status(400)
+        .json({ error: "Username and password are required" });
     }
 
     console.log(username);
     console.log(password);
-    
+
     connection = await getDbConnection();
 
     // Update query with Oracle bind variable syntax
@@ -36,10 +38,10 @@ router.post("/login", async (req, res) => {
                    JOIN position ON employee.posi_id = position.posi_id 
                    WHERE employee.username = :username 
                    AND employee.password = :password`;
-    
+
     // Execute the query
     const result = await connection.execute(query, { username, password });
-    
+
     // Access the rows correctly depending on your driver
     const results = result.rows || result;
     //console.log(results);
@@ -61,6 +63,7 @@ router.post("/login", async (req, res) => {
     const user = rows[0];
     const payload = {
       user: {
+        emp_id: user.EMP_ID,
         fname: user.FNAME,
         lname: user.LNAME,
         posi_id: user.POSI_ID,
@@ -70,7 +73,9 @@ router.post("/login", async (req, res) => {
 
     jwt.sign(payload, "jwtsecret", { expiresIn: "1h" }, (err, token) => {
       if (err) throw err;
-      return res.status(200).json({ message: "Login successful", token, payload });
+      return res
+        .status(200)
+        .json({ message: "Login successful", token, payload });
     });
   } catch (err) {
     console.error("Error executing query", err);
@@ -85,6 +90,5 @@ router.post("/login", async (req, res) => {
     }
   }
 });
-
 
 module.exports = router;
