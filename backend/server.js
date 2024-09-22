@@ -11,7 +11,7 @@ const db = require("./Database/db");
 
 try {
   // กำหนด path ไปยังโฟลเดอร์ที่ติดตั้ง Oracle Instant Client
-  oracledb.initOracleClient({ libDir: "C:/instantclient_12_1" });
+  oracledb.initOracleClient({ libDir: "C:/Program Files/instantclient-basic-windows.x64-23.5.0.24.07" });
 } catch (err) {
   console.error("Whoops! Error initializing Oracle Client:", err);
   process.exit(1);
