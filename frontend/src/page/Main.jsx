@@ -5,6 +5,7 @@ import BookingDetail from "../components/Booking-Detail";
 import ChooseRoom from "../components/Choose-Room";
 import BookingHistory from "../components/Booking-History";
 import Report from "../components/Report";
+import ReportMeeting from "../components/ReportMeeting";
 
 function Main() {
   return (
@@ -28,6 +29,7 @@ function Main() {
           />
           <Route path="booking-history" element={<BookingHistory />} />
           <Route path="report" element={<Report />} />
+          <Route path="reportmeeting" element={<ReportMeeting />} />
         </Routes>
       </main>
     </div>

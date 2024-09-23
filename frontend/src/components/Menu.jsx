@@ -100,7 +100,7 @@ return (
                 {showReportDropdown && (
                 <ul className="absolute top-full left-0 w-47 bg-red-800 text-white">
                     <li>
-                        <Link to={"/main/reportmeeting"}
+                        <Link to={"/main/reportmeeting"} 
                             className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-md">
                         <GoTriangleRight className="mr-2 text-lg" /> Report 1
                         </Link>

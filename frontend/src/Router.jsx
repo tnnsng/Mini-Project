@@ -8,7 +8,8 @@ import ChooseRoom from "./components/Choose-Room.jsx";
 import BookingRoom from "./components/Booking-Room.jsx";
 import BookingDetail from "./components/Booking-Detail.jsx";
 import Report from "./components/Report.jsx";
-//import ReportMeeting from "./components/ReportMeeting.jsx";
+import ReportMeeting from "./components/ReportMeeting.jsx";
+
 
 
 
@@ -42,8 +43,8 @@ const routes = [
         element: <Report />,
       },
       {
-       // path:"reportmeeting",
-       // element:<ReportMeeting/>
+        path: "reportmeeting",
+        element: <ReportMeeting />
       },
     ],
   },
