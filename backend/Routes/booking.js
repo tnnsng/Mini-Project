@@ -67,16 +67,10 @@ router.get("/booking", async (req, res) => {
   }
 });
 
-router.post("/booking/:id", async (req, res) => {
+router.post("/booking", async (req, res) => {
   let connection;
   try {
-    const { id } = req.params;
-
-    // ตรวจสอบว่ามี id หรือไม่
-    if (!id) {
-      return res.status(400).json({ error: "Id is required" });
-    }
-
+    
     const { book_date, startdate, enddate, room_id, emp_id } = req.body;
 
     // ตรวจสอบข้อมูลที่ส่งมา
