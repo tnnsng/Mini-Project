@@ -74,7 +74,6 @@ const BookingRoom = () => {
           startdate: formattedStartDate, // ใช้วันที่ที่แปลงแล้ว
           enddate: formattedEndDate, // ใช้วันที่ที่แปลงแล้ว
           room_id: room.ROOM_ID,
-          app_id: "SA001",
           emp_id: empID,
         }),
       });
@@ -137,9 +136,12 @@ const BookingRoom = () => {
     // ใช้ Swal เพื่อยืนยันก่อนทำการจอง
     Swal.fire({
       title: "คุณแน่ใจหรือไม่?",
-      text: `คุณต้องการจองห้องประชุมใช่หรือไม่? ${bookDate} ${formatDateToUniversal(
+      text: `คุณต้องการจองห้องประชุมใช่หรือไม่?\n
+      วันที่: ${bookDate}\nเวลาเริ่มต้น: ${formatDateToUniversal(
         startDateTime
-      )} ${formatDateToUniversal(endDateTime)} ${room.ROOM_ID} ${empID}`,
+      )}\nเวลาสิ้นสุด: ${formatDateToUniversal(endDateTime)}\nห้อง: ${
+        room.ROOM_ID
+      }\nพนักงาน ID: ${empID}`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",

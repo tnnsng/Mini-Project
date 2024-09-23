@@ -8,6 +8,7 @@ import ChooseRoom from "./components/Choose-Room.jsx";
 import BookingRoom from "./components/Booking-Room.jsx";
 import BookingDetail from "./components/Booking-Detail.jsx";
 import Report from "./components/Report.jsx";
+import ReportMeeting from "./components/Report-Meeting.jsx";
 
 import "./index.css";
 
@@ -37,6 +38,10 @@ const routes = [
       {
         path: "report",
         element: <Report />,
+      },
+      {
+        path: "report-meeting",
+        element: <ReportMeeting />,
       },
     ],
   },

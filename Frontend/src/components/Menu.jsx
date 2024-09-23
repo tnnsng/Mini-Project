@@ -10,6 +10,7 @@ import {
   FaUserTag,
   FaDoorClosed,
 } from "react-icons/fa"; // Added new icons
+import { GoTriangleRight } from "react-icons/go";
 import { IoHome } from "react-icons/io5";
 import { BiSolidReport } from "react-icons/bi";
 import { Link, useLocation } from "react-router-dom";
@@ -19,6 +20,11 @@ const Menu = () => {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [positionName, setPositionName] = useState("");
+
+  const [showReportDropdown, setShowReportDropdown] = useState(false);
+  const toggleReportDropdown = () => {
+    setShowReportDropdown(!showReportDropdown);
+  };
 
   const location = useLocation(); // ใช้ location เพื่อตรวจสอบ path ปัจจุบัน
 
@@ -171,15 +177,35 @@ const Menu = () => {
             <FaUserTag className="mr-2 text-lg" /> Manage Position
           </Link>
 
-          <Link
-            to={"/main/report"}
-            className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
-              selectedMenu === "report" ? "bg-red-700" : ""
-            }`}
-            onClick={() => handleMenuSelect("report")}
+          <li
+            className="menu-item flex justify-start pl-2 p-1 cursor-pointer hover:bg-red-700 text-md relative"
+            onMouseEnter={toggleReportDropdown}
+            onMouseLeave={toggleReportDropdown}
           >
-            <BiSolidReport className="mr-2 text-lg" /> Report
-          </Link>
+            <div className="flex items-center pl-0">
+              <BiSolidReport className="text-lg" /> Report
+            </div>
+            {showReportDropdown && (
+              <ul className="absolute top-full left-0 w-47 bg-red-800 text-white">
+                <li>
+                  <Link
+                    to={"/main/report-meeting"}
+                    className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-md"
+                  >
+                    <GoTriangleRight className="mr-2 text-lg" /> Report 1
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to={"/main/report"}
+                    className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-md"
+                  >
+                    <GoTriangleRight className="mr-2 text-lg" /> Report 2
+                  </Link>
+                </li>
+              </ul>
+            )}
+          </li>
         </ul>
         <button className="logout-btn flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-lg w-full mt-auto">
           <FaSignOutAlt className="mr-2 text-lg" />
