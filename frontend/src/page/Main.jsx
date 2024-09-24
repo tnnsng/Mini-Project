@@ -12,6 +12,7 @@ import EditRoom from "../components/EditRoom.jsx";
 import AddFloor from "../components/AddFloor.jsx";
 import User from "../components/User.jsx";
 import Waiting from "../components/WaitingApprove.jsx";
+import Addpermission from "../components/Addpermission.jsx";
 
 function Main() {
   return (
@@ -40,6 +41,7 @@ function Main() {
           <Route path="edit-room" element={<EditRoom />} />
           <Route path="manage-user" element={<User />} />
           <Route path="waiting-approve" element={<Waiting />} />
+          <Route path="manage-permission" element={<Addpermission />} />
         </Routes>
       </main>
     </div>

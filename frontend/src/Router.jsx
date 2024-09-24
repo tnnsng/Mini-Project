@@ -17,6 +17,7 @@ import AddFloor from "./components/AddFloor.jsx";
 import "./index.css";
 import User from "./components/User.jsx";
 import Waiting from "./components/WaitingApprove.jsx";
+import Addpermission from "./components/Addpermission.jsx";
 
 const routes = [
   {
@@ -74,6 +75,10 @@ const routes = [
       {
         path: "waiting-approve",
         element: <Waiting />,
+      },
+      {
+        path: "manage-permission",
+        element: <Addpermission />,
       },
     ],
   },
