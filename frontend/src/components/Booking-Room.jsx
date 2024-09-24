@@ -10,7 +10,8 @@ import {
 } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import QRCode from "qrcode";
 
 const formatDateToUniversal = (date) => {
   const year = date.getFullYear();
@@ -31,6 +32,8 @@ const BookingRoom = () => {
   const room = JSON.parse(localStorage.getItem("selectedRoom"));
   const empID = localStorage.getItem("emp_id");
 
+  const navigate = useNavigate();
+
   const handleBooking = async () => {
     try {
       if (!startDate || !startTime || !endDate || !endTime) {
@@ -43,7 +46,7 @@ const BookingRoom = () => {
       }
 
       const now = new Date();
-      const bookDate = formatDateToUniversal(now); // ใช้ฟังก์ชันใหม่ในการแปลงวันที่ปัจจุบัน
+      const bookDate = formatDateToUniversal(now);
 
       const startDateTime = new Date(
         startDate.getFullYear(),
@@ -70,30 +73,86 @@ const BookingRoom = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          book_date: bookDate, // วันที่จองคือวันที่ปัจจุบัน
-          startdate: formattedStartDate, // ใช้วันที่ที่แปลงแล้ว
-          enddate: formattedEndDate, // ใช้วันที่ที่แปลงแล้ว
+          book_date: bookDate,
+          startdate: formattedStartDate,
+          enddate: formattedEndDate,
           room_id: room.ROOM_ID,
-          app_id: "SA001",
           emp_id: empID,
         }),
       });
 
       const result = await response.json();
+      console.log(result);
 
       if (response.ok) {
-        Swal.fire({
-          icon: "success",
-          title: "จองสำเร็จ",
-          text: "การจองห้องประชุมของคุณเสร็จสมบูรณ์แล้ว!",
-        });
-      } else {
+        if (room.TYPE_ID === "VIP") {
+          Swal.fire({
+            icon: "info",
+            title: "รอการอนุมัติ",
+            text: "การจองห้อง VIP ของคุณจะต้องรอการอนุมัติก่อน",
+          });
+        } else {
+          const randomNumber = Math.floor(100000 + Math.random() * 900000);
+          const qrCodeDataURL = await QRCode.toDataURL(randomNumber.toString());
+
+          Swal.fire({
+            icon: "success",
+            title: "อนุมัติ",
+            html: `
+              <p>การจองห้องประชุมของคุณเสร็จสมบูรณ์แล้ว!</p>
+              <p>กรุณาใช้ QR Code ด้านล่างสำหรับการเข้าห้อง</p>
+              <div style="display: flex; justify-content: center;">
+                <img src="${qrCodeDataURL}" alt="QR Code" style="max-width: 100%; height: auto;"/>
+              </div>
+              <p>รหัสสำหรับการเข้าห้อง: <strong>${randomNumber}</strong></p>
+            `,
+          });
+
+          navigate("/main/booking-history");
+
+          // Insert ข้อมูล QR Code
+          /*const qrCodeResponse = await fetch("http://localhost:5000/qrcode", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              book_id: result.book_id,
+              num: randomNumber,
+            }),
+          });
+
+          if (qrCodeResponse.ok) {
+            // แสดงข้อความสำเร็จ
+            Swal.fire({
+              icon: "success",
+              title: "อนุมัติ",
+              html: `
+                <p>การจองห้องประชุมของคุณเสร็จสมบูรณ์แล้ว!</p>
+                <p>กรุณาใช้ QR Code ด้านล่างสำหรับการเข้าห้อง</p>
+                <div style="display: flex; justify-content: center;">
+                  <img src="${qrCodeDataURL}" alt="QR Code" style="max-width: 100%; height: auto;"/>
+                </div>
+                <p>รหัสสำหรับการเข้าห้อง: <strong>${randomNumber}</strong></p>
+              `,
+            });
+            
+          } else {
+            const qrCodeResult = await qrCodeResponse.json();
+            Swal.fire({
+              icon: "error",
+              title: "เกิดข้อผิดพลาดในการบันทึก QR Code",
+              text: qrCodeResult.error || "ไม่สามารถบันทึก QR Code ได้",
+            });*/
+        }
+      }
+      /*}else {
         Swal.fire({
           icon: "error",
           title: "เกิดข้อผิดพลาด",
           text: result.error || "ไม่สามารถจองห้องประชุมได้",
         });
-      }
+      }*/
     } catch (error) {
       console.error("Error booking room:", error);
       Swal.fire({
@@ -114,9 +173,6 @@ const BookingRoom = () => {
       });
       return;
     }
-
-    const now = new Date();
-    const bookDate = formatDateToUniversal(now); // วันที่ปัจจุบันในรูปแบบไทย
     // รวมวันที่และเวลาเข้าด้วยกัน
     const startDateTime = new Date(
       startDate.getFullYear(),
@@ -136,10 +192,13 @@ const BookingRoom = () => {
 
     // ใช้ Swal เพื่อยืนยันก่อนทำการจอง
     Swal.fire({
-      title: "คุณแน่ใจหรือไม่?",
-      text: `คุณต้องการจองห้องประชุมใช่หรือไม่? ${bookDate} ${formatDateToUniversal(
+      title: "คุณต้องการจองห้องประชุมใช่หรือไม่?",
+      html: `ห้อง: ${room.ROOM_NAME} ตึก: ${room.BUILD_NAME} ชั้น: ${
+        room.FLOOR_NAME
+      }
+      <br> วันเวลาเริ่มต้น: ${formatDateToUniversal(
         startDateTime
-      )} ${formatDateToUniversal(endDateTime)} ${room.ROOM_ID} ${empID}`,
+      )} <br> วันเวลาสิ้นสุด: ${formatDateToUniversal(endDateTime)}`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -278,10 +337,10 @@ const BookingRoom = () => {
 
       <div className="flex justify-end">
         <button
-          className="bg-red-900 text-xl text-center text-white py-2 px-6 rounded-xl hover:bg-red-950 drop-shadow-xl"
+          className="bg-red-900 text-xl text-center text-white py-3 px-6 rounded-xl hover:bg-red-950 drop-shadow-xl"
           onClick={confirmBooking}
         >
-          Confirm Reserve
+          ยืนยันการจอง
         </button>
       </div>
     </div>

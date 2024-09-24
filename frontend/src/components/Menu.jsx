@@ -10,15 +10,22 @@ import {
   FaUserTag,
   FaDoorClosed,
 } from "react-icons/fa"; // Added new icons
+import { GoTriangleRight } from "react-icons/go";
 import { IoHome } from "react-icons/io5";
 import { BiSolidReport } from "react-icons/bi";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 const Menu = () => {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [positionName, setPositionName] = useState("");
+
+  const [showReportDropdown, setShowReportDropdown] = useState(false);
+  const toggleReportDropdown = () => {
+    setShowReportDropdown(!showReportDropdown);
+  };
 
   const location = useLocation(); // ใช้ location เพื่อตรวจสอบ path ปัจจุบัน
 
@@ -42,6 +49,39 @@ const Menu = () => {
       setPositionName(storedPositionName);
     }
   }, []);
+
+  const navigate = useNavigate();
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+
+    // แสดง popup ยืนยันการ Logout
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out of your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, logout!",
+      cancelButtonText: "Cancel",
+    });
+
+    if (result.isConfirmed) {
+      navigate("/");
+
+      localStorage.removeItem("fname");
+      localStorage.removeItem("lname");
+      localStorage.removeItem("posi_name");
+
+      // แสดงการแจ้งเตือนว่าออกจากระบบเรียบร้อยแล้ว
+      Swal.fire(
+        "Logged out!",
+        "You have been logged out successfully.",
+        "success"
+      );
+    }
+  };
 
   return (
     <div className="menu w-52 h-screen bg-red-900 text-white flex flex-col overflow-y-auto">
@@ -132,11 +172,11 @@ const Menu = () => {
           </Link>
 
           <Link
-            to={"/main/approve-booking"}
+            to={"/main/waiting-approve"}
             className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
-              selectedMenu === "approve-booking" ? "bg-red-700" : ""
+              selectedMenu === "waiting-approve" ? "bg-red-700" : ""
             }`}
-            onClick={() => handleMenuSelect("approve-booking")}
+            onClick={() => handleMenuSelect("waiting-approve")}
           >
             <FaCheck className="mr-2 text-lg" /> Approve Booking
           </Link>
@@ -171,19 +211,43 @@ const Menu = () => {
             <FaUserTag className="mr-2 text-lg" /> Manage Position
           </Link>
 
-          <Link
-            to={"/main/report"}
-            className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
-              selectedMenu === "report" ? "bg-red-700" : ""
-            }`}
-            onClick={() => handleMenuSelect("report")}
+          <li
+            className="menu-item flex justify-start pl-2 p-1 cursor-pointer hover:bg-red-700 text-md relative"
+            onMouseEnter={toggleReportDropdown}
+            onMouseLeave={toggleReportDropdown}
           >
-            <BiSolidReport className="mr-2 text-lg" /> Report
-          </Link>
+            <div className="flex items-center pl-0">
+              <BiSolidReport className="text-lg" /> Report
+            </div>
+            {showReportDropdown && (
+              <ul className="absolute top-full left-0 w-47 bg-red-800 text-white">
+                <li>
+                  <Link
+                    to={"/main/report-meeting"}
+                    className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md"
+                    onClick={() => handleMenuSelect("report")}
+                  >
+                    <GoTriangleRight className="mr-2 text-lg" /> Report 1
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to={"/main/report"}
+                    className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md"
+                  >
+                    <GoTriangleRight className="mr-2 text-lg" /> Report 2
+                  </Link>
+                </li>
+              </ul>
+            )}
+          </li>
         </ul>
-        <button className="logout-btn flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-lg w-full mt-auto">
+        <button
+          className="logout-btn flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-lg w-full mt-auto"
+          onClick={handleLogout}
+        >
           <FaSignOutAlt className="mr-2 text-lg" />
-          <Link to={"/"}> Logout</Link>
+          Logout
         </button>
       </div>
     </div>

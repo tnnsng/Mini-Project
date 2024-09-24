@@ -27,9 +27,6 @@ router.post("/login", async (req, res) => {
         .json({ error: "Username and password are required" });
     }
 
-    console.log(username);
-    console.log(password);
-
     connection = await getDbConnection();
 
     // Update query with Oracle bind variable syntax
