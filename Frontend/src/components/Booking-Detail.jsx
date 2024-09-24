@@ -26,9 +26,8 @@ const BookingDetail = () => {
   }, []);
 
   const filteredBooking = booking.filter((booking) => {
-    // ตรวจสอบค่าของ dropdown ที่ผู้ใช้เลือกทีละตัว
-    const matchesRoomBooking = room.ROOM_NAME
-      ? booking.ROOM_NAME === room.ROOM_NAME
+    const matchesRoomBooking = room.ROOM_ID
+      ? booking.ROOM_ID === room.ROOM_ID
       : true;
 
     // แปลง date ให้เป็นรูปแบบ DD-MM-YYYY
