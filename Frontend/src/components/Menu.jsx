@@ -172,11 +172,11 @@ const Menu = () => {
           </Link>
 
           <Link
-            to={"/main/approve-booking"}
+            to={"/main/waiting-approve"}
             className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
-              selectedMenu === "approve-booking" ? "bg-red-700" : ""
+              selectedMenu === "waiting-approve" ? "bg-red-700" : ""
             }`}
-            onClick={() => handleMenuSelect("approve-booking")}
+            onClick={() => handleMenuSelect("waiting-approve")}
           >
             <FaCheck className="mr-2 text-lg" /> Approve Booking
           </Link>

@@ -16,6 +16,7 @@ import AddFloor from "./components/AddFloor.jsx";
 
 import "./index.css";
 import User from "./components/User.jsx";
+import Waiting from "./components/WaitingApprove.jsx";
 
 const routes = [
   {
@@ -69,6 +70,10 @@ const routes = [
       {
         path: "manage-user",
         element: <User />,
+      },
+      {
+        path: "waiting-approve",
+        element: <Waiting />,
       },
     ],
   },
