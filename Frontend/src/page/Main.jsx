@@ -6,6 +6,11 @@ import ChooseRoom from "../components/Choose-Room";
 import BookingHistory from "../components/Booking-History";
 import Report from "../components/Report";
 import ReportMeeting from "../components/Report-Meeting";
+import AddBuild from "../components/AddBuild.jsx";
+import AddRoom from "../components/AddRoom.jsx";
+import EditRoom from "../components/EditRoom.jsx";
+import AddFloor from "../components/AddFloor.jsx";
+import User from "../components/User.jsx";
 
 function Main() {
   return (
@@ -28,6 +33,11 @@ function Main() {
           <Route path="booking-history" element={<BookingHistory />} />
           <Route path="report" element={<Report />} />
           <Route path="report-meeting" element={<ReportMeeting />} />
+          <Route path="manage-room" element={<AddRoom />} />
+          <Route path="manage-building" element={<AddBuild />} />
+          <Route path="manage-floor" element={<AddFloor />} />
+          <Route path="edit-room" element={<EditRoom />} />
+          <Route path="manage-user" element={<User />} />
         </Routes>
       </main>
     </div>

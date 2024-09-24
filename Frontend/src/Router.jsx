@@ -9,8 +9,13 @@ import BookingRoom from "./components/Booking-Room.jsx";
 import BookingDetail from "./components/Booking-Detail.jsx";
 import Report from "./components/Report.jsx";
 import ReportMeeting from "./components/Report-Meeting.jsx";
+import AddBuild from "./components/AddBuild.jsx";
+import AddRoom from "./components/AddRoom.jsx";
+import EditRoom from "./components/EditRoom.jsx";
+import AddFloor from "./components/AddFloor.jsx";
 
 import "./index.css";
+import User from "./components/User.jsx";
 
 const routes = [
   {
@@ -42,6 +47,28 @@ const routes = [
       {
         path: "report-meeting",
         element: <ReportMeeting />,
+      },
+      {
+        path: "manage-room/*",
+        element: <AddRoom />,
+        children:[
+          {
+            path: "edit-room",
+            element: <EditRoom />,
+          },
+        ],
+      },
+      {
+        path: "manage-building",
+        element: <AddBuild />,
+      },
+      {
+        path: "manage-floor",
+        element: <AddFloor />,
+      },
+      {
+        path: "manage-user",
+        element: <User />,
       },
     ],
   },

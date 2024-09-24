@@ -81,7 +81,8 @@ const BookingRoom = () => {
         }),
       });
 
-      //const result = await response.json();
+      const result = await response.json();
+      console.log(result);
 
       if (response.ok) {
         if (room.TYPE_ID === "VIP") {
@@ -116,23 +117,26 @@ const BookingRoom = () => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              book_id: result.bookID,
+              book_id: result.book_id,
               num: randomNumber,
             }),
-          });*/
+          });
 
-          /*if (qrCodeResponse.ok) {
+          if (qrCodeResponse.ok) {
             // แสดงข้อความสำเร็จ
             Swal.fire({
               icon: "success",
-              title: "จองสำเร็จ",
+              title: "อนุมัติ",
               html: `
                 <p>การจองห้องประชุมของคุณเสร็จสมบูรณ์แล้ว!</p>
-                <p>กรุณาใช้ QR Code ด้านล่างสำหรับการเข้าห้อง:</p>
-                <img src="${qrCodeDataURL}" alt="QR Code" />
+                <p>กรุณาใช้ QR Code ด้านล่างสำหรับการเข้าห้อง</p>
+                <div style="display: flex; justify-content: center;">
+                  <img src="${qrCodeDataURL}" alt="QR Code" style="max-width: 100%; height: auto;"/>
+                </div>
                 <p>รหัสสำหรับการเข้าห้อง: <strong>${randomNumber}</strong></p>
               `,
             });
+            
           } else {
             const qrCodeResult = await qrCodeResponse.json();
             Swal.fire({
@@ -142,7 +146,7 @@ const BookingRoom = () => {
             });*/
         }
       }
-      /*} else {
+      /*}else {
         Swal.fire({
           icon: "error",
           title: "เกิดข้อผิดพลาด",

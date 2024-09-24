@@ -224,7 +224,8 @@ const Menu = () => {
                 <li>
                   <Link
                     to={"/main/report-meeting"}
-                    className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-md"
+                    className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md"
+                    onClick={() => handleMenuSelect("report")}
                   >
                     <GoTriangleRight className="mr-2 text-lg" /> Report 1
                   </Link>
@@ -232,7 +233,7 @@ const Menu = () => {
                 <li>
                   <Link
                     to={"/main/report"}
-                    className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-950 text-md"
+                    className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md"
                   >
                     <GoTriangleRight className="mr-2 text-lg" /> Report 2
                   </Link>
