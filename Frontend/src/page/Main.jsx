@@ -12,6 +12,8 @@ import EditRoom from "../components/EditRoom.jsx";
 import AddFloor from "../components/AddFloor.jsx";
 import User from "../components/User.jsx";
 import Waiting from "../components/WaitingApprove.jsx";
+import AddUser from "../components/AddUser.jsx";
+import EditUser from "../components/EditUser.jsx";
 
 function Main() {
   return (
@@ -40,6 +42,8 @@ function Main() {
           <Route path="edit-room" element={<EditRoom />} />
           <Route path="manage-user" element={<User />} />
           <Route path="waiting-approve" element={<Waiting />} />
+          <Route path="add-user" element={<AddUser />} />
+          <Route path="edit-user/:id" element={<EditUser />} />
         </Routes>
       </main>
     </div>
