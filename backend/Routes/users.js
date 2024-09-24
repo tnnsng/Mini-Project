@@ -35,6 +35,49 @@ router.get("/users", async (req, res) => {
       return rowData;
     });
 
+    router.get("/users/:empId", async (req, res) => {
+      let connection;
+      const { empId } = req.params; // Get the empId from the route parameters
+      try {
+        connection = await getDbConnection();
+    
+        // Modify the query to fetch a specific employee by their EMP_ID
+        const result = await connection.execute(
+          "SELECT * FROM EMPLOYEE WHERE EMP_ID = :empId",
+          [empId] // Pass empId as a bind variable
+        );
+    
+        if (result.rows.length === 0) {
+          return res.status(404).json({ message: "User not found" });
+        }
+    
+        // Extract column headers from metadata
+        const headers = result.metaData.map((col) => col.name);
+    
+        // Map row data to a JSON object
+        const row = result.rows[0];
+        const rowData = {};
+        row.forEach((cell, index) => {
+          rowData[headers[index]] = cell;
+        });
+    
+        // Return the user data as JSON
+        res.json(rowData);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).json({ message: "Error fetching user data" });
+      } finally {
+        if (connection) {
+          try {
+            await connection.close(); // Close the database connection
+          } catch (error) {
+            console.error("Error closing the connection:", error);
+          }
+        }
+      }
+    });
+    
+
     // ส่งผลลัพธ์เป็น JSON
     res.json(rows);
   } catch (err) {
