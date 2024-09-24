@@ -231,13 +231,27 @@ router.post("/booking", async (req, res) => {
       `SELECT book_seq.CURRVAL FROM dual`
     );
     const book_id = bookIdResult.rows[0][0];
+    const randomNumber = Math.floor(100000 + Math.random() * 900000);
+
+    await connection.execute(
+      `INSERT INTO  qrcode ( book_id, num ) VALUES ( :book_id, :num) `,
+      {
+        book_id: book_id,
+        num: randomNumber,
+      }
+    );
 
     await connection.commit();
 
-    res.status(201).json({ message: "Booking created successfully", book_id });
+    res
+      .status(201)
+      .json({
+        message: "Booking created successfully",
+        book_id,
+        qr_code: randomNumber,
+      });
   } catch (err) {
     console.error("Error executing query", err);
-    if (connection) await connection.rollback(); // Rollback if there's an error
     res.status(500).json({ error: "Internal Server Error" });
   } finally {
     if (connection) {

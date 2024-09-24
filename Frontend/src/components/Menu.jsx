@@ -16,11 +16,13 @@ import { BiSolidReport } from "react-icons/bi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 const Menu = () => {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [positionName, setPositionName] = useState("");
+  const [permissions, setPermissions] = useState([]);
 
   const [showReportDropdown, setShowReportDropdown] = useState(false);
   const toggleReportDropdown = () => {
@@ -37,6 +39,7 @@ const Menu = () => {
   useEffect(() => {
     const storedFname = localStorage.getItem("fname");
     const storedLname = localStorage.getItem("lname");
+    const storedPositionID = localStorage.getItem("posi_id");
     const storedPositionName = localStorage.getItem("posi_name");
 
     if (storedFname) {
@@ -48,7 +51,26 @@ const Menu = () => {
     if (storedPositionName) {
       setPositionName(storedPositionName);
     }
+
+    // ดึงข้อมูลสิทธิ์ของผู้ใช้ที่เกี่ยวข้องกับตำแหน่ง
+    const fetchPermissions = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/perposition/${storedPositionID}`
+        );
+        setPermissions(response.data);
+      } catch (error) {
+        console.error("Error fetching permissions:", error);
+      }
+    };
+
+    fetchPermissions();
   }, []);
+
+  // ตรวจสอบสิทธิ์ว่าผู้ใช้งานมีสิทธิ์ในเมนูนั้นๆ หรือไม่
+  const hasPermission = (permID) => {
+    return permissions.some((perm) => perm.PER_ID === permID);
+  };
 
   const navigate = useNavigate();
 
@@ -57,14 +79,14 @@ const Menu = () => {
 
     // แสดง popup ยืนยันการ Logout
     const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "You will be logged out of your account.",
+      title: "คุณแน่ใจ?",
+      text: "คุณต้องการออกจากระบบใช่หรือไม่?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, logout!",
-      cancelButtonText: "Cancel",
+      confirmButtonText: "ใช่, ออกจากระบบ!",
+      cancelButtonText: "ยกเลิก",
     });
 
     if (result.isConfirmed) {
@@ -72,14 +94,11 @@ const Menu = () => {
 
       localStorage.removeItem("fname");
       localStorage.removeItem("lname");
+      localStorage.removeItem("posi_id");
       localStorage.removeItem("posi_name");
 
       // แสดงการแจ้งเตือนว่าออกจากระบบเรียบร้อยแล้ว
-      Swal.fire(
-        "Logged out!",
-        "You have been logged out successfully.",
-        "success"
-      );
+      Swal.fire("ออกจากระบบ!", "คุณได้ออกจากระบบเรียบร้อยแล้ว", "success");
     }
   };
 
@@ -99,17 +118,19 @@ const Menu = () => {
 
       <div className="controls flex flex-col flex-grow">
         <ul className="menu flex-grow">
-          <Link
-            to={"/main/home"}
-            className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
-              location.pathname === "/main/home" || selectedMenu === "home"
-                ? "bg-red-700"
-                : ""
-            }`} // เช็ค path ด้วย location.pathname
-            onClick={() => handleMenuSelect("home")}
-          >
-            <IoHome className="mr-2 text-lg" /> Home
-          </Link>
+          {hasPermission("PER01") && (
+            <Link
+              to={"/main/home"}
+              className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
+                location.pathname === "/main/home" || selectedMenu === "home"
+                  ? "bg-red-700"
+                  : ""
+              }`} // เช็ค path ด้วย location.pathname
+              onClick={() => handleMenuSelect("home")}
+            >
+              <IoHome className="mr-2 text-lg" /> Home
+            </Link>
+          )}
 
           <Link
             to={"/main/booking-history"}
@@ -121,15 +142,17 @@ const Menu = () => {
             <FaClipboardList className="mr-2 text-lg" /> Booking History
           </Link>
 
-          <Link
-            to={"/main/manage-room"}
-            className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
-              selectedMenu === "manage-room" ? "bg-red-700" : ""
-            }`}
-            onClick={() => handleMenuSelect("manage-room")}
-          >
-            <FaDoorClosed className="mr-2 text-lg" /> Manage Room
-          </Link>
+          {hasPermission("PER02") && (
+            <Link
+              to={"/main/manage-room"}
+              className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
+                selectedMenu === "manage-room" ? "bg-red-700" : ""
+              }`}
+              onClick={() => handleMenuSelect("manage-room")}
+            >
+              <FaDoorClosed className="mr-2 text-lg" /> Manage Room
+            </Link>
+          )}
 
           <Link
             to={"/main/manage-building"}
@@ -151,15 +174,17 @@ const Menu = () => {
             <FaBuilding className="mr-2 text-lg" /> Manage Floor
           </Link>
 
-          <Link
-            to={"/main/manage-user"}
-            className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
-              selectedMenu === "manage-user" ? "bg-red-700" : ""
-            }`}
-            onClick={() => handleMenuSelect("manage-user")}
-          >
-            <FaUsersCog className="mr-2 text-lg" /> Manage User
-          </Link>
+          {hasPermission("PER04") && (
+            <Link
+              to={"/main/manage-user"}
+              className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
+                selectedMenu === "manage-user" ? "bg-red-700" : ""
+              }`}
+              onClick={() => handleMenuSelect("manage-user")}
+            >
+              <FaUsersCog className="mr-2 text-lg" /> Manage User
+            </Link>
+          )}
 
           <Link
             to={"/main/unlock-user"}
@@ -181,15 +206,17 @@ const Menu = () => {
             <FaCheck className="mr-2 text-lg" /> Approve Booking
           </Link>
 
-          <Link
-            to={"/main/manage-permission"}
-            className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
-              selectedMenu === "manage-permission" ? "bg-red-700" : ""
-            }`}
-            onClick={() => handleMenuSelect("manage-permission")}
-          >
-            <FaUserShield className="mr-2 text-lg" /> Manage Permission
-          </Link>
+          {hasPermission("PER03") && (
+            <Link
+              to={"/main/manage-permission"}
+              className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
+                selectedMenu === "manage-permission" ? "bg-red-700" : ""
+              }`}
+              onClick={() => handleMenuSelect("manage-permission")}
+            >
+              <FaUserShield className="mr-2 text-lg" /> Manage Permission
+            </Link>
+          )}
 
           <Link
             to={"/main/manage-department"}
@@ -211,36 +238,38 @@ const Menu = () => {
             <FaUserTag className="mr-2 text-lg" /> Manage Position
           </Link>
 
-          <li
-            className="menu-item flex justify-start pl-2 p-1 cursor-pointer hover:bg-red-700 text-md relative"
-            onMouseEnter={toggleReportDropdown}
-            onMouseLeave={toggleReportDropdown}
-          >
-            <div className="flex items-center pl-0">
-              <BiSolidReport className="text-lg" /> Report
-            </div>
-            {showReportDropdown && (
-              <ul className="absolute top-full left-0 w-47 bg-red-800 text-white">
-                <li>
-                  <Link
-                    to={"/main/report-meeting"}
-                    className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md"
-                    onClick={() => handleMenuSelect("report")}
-                  >
-                    <GoTriangleRight className="mr-2 text-lg" /> Report 1
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to={"/main/report"}
-                    className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md"
-                  >
-                    <GoTriangleRight className="mr-2 text-lg" /> Report 2
-                  </Link>
-                </li>
-              </ul>
-            )}
-          </li>
+          {hasPermission("PER05") && (
+            <li
+              className="menu-item flex justify-start pl-2 p-1 cursor-pointer hover:bg-red-700 text-md relative"
+              onMouseEnter={toggleReportDropdown}
+              onMouseLeave={toggleReportDropdown}
+            >
+              <div className="flex items-center pl-0">
+                <BiSolidReport className="text-lg" /> Report
+              </div>
+              {showReportDropdown && (
+                <ul className="absolute top-full left-0 w-47 bg-red-800 text-white">
+                  <li>
+                    <Link
+                      to={"/main/report-meeting"}
+                      className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md"
+                      onClick={() => handleMenuSelect("report")}
+                    >
+                      <GoTriangleRight className="mr-2 text-lg" /> Report 1
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to={"/main/report"}
+                      className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md"
+                    >
+                      <GoTriangleRight className="mr-2 text-lg" /> Report 2
+                    </Link>
+                  </li>
+                </ul>
+              )}
+            </li>
+          )}
         </ul>
         <button
           className="logout-btn flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-lg w-full mt-auto"

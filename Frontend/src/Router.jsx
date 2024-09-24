@@ -17,6 +17,7 @@ import AddFloor from "./components/AddFloor.jsx";
 import "./index.css";
 import User from "./components/User.jsx";
 import Waiting from "./components/WaitingApprove.jsx";
+import AddPermission from "./components/AddPermission.jsx";
 
 const routes = [
   {
@@ -52,7 +53,7 @@ const routes = [
       {
         path: "manage-room/*",
         element: <AddRoom />,
-        children:[
+        children: [
           {
             path: "edit-room",
             element: <EditRoom />,
@@ -74,6 +75,10 @@ const routes = [
       {
         path: "waiting-approve",
         element: <Waiting />,
+      },
+      {
+        path: "manage-permission",
+        element: <AddPermission />,
       },
     ],
   },
