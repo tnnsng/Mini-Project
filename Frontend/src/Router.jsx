@@ -18,6 +18,8 @@ import "./index.css";
 import User from "./components/User.jsx";
 import Waiting from "./components/WaitingApprove.jsx";
 import AddPermission from "./components/AddPermission.jsx";
+import BookingHistory from "./components/Booking-History.jsx";
+import CancelBooking from "./components/Cancel-Booking.jsx";
 
 const routes = [
   {
@@ -63,6 +65,16 @@ const routes = [
       {
         path: "manage-building",
         element: <AddBuild />,
+      },
+      {
+        path: "booking-history/*",
+        element: <BookingHistory />,
+        children: [
+          {
+            path: "cancel-booking/:roomName",
+            element: <CancelBooking />,
+          },
+        ],
       },
       {
         path: "manage-floor",

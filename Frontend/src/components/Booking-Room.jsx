@@ -200,7 +200,7 @@ const BookingRoom = () => {
             <input
               type="text"
               className="input input-bordered rounded-xl w-full bg-white drop-shadow-lg text-xl text-gray-800 pl-14"
-              value={`: ${room.BUILD_NAME} ${room.FLOOR_NAME}`}
+              value={`: ${room.BUILD_NAME}`}
               readOnly
             />
             <FaBuilding className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-800 text-3xl" />

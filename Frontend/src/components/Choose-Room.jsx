@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaSearch } from "react-icons/fa"; // ไอคอนค้นหา
+import { FaSearch, FaCalendarAlt, FaClock } from "react-icons/fa"; // ไอคอนค้นหา
 import axios from "axios";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const ChooseRoom = () => {
   // useState สำหรับจัดการค่าที่ผู้ใช้เลือกเพื่อกรองห้อง
@@ -14,6 +16,9 @@ const ChooseRoom = () => {
   const [selectedBuild, setSelectedBuild] = useState("");
   const [selectedFloor, setSelectedFloor] = useState("");
   const [selectedAmount, setSelectedAmount] = useState("");
+
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
 
   // State สำหรับจัดเก็บข้อมูลห้องที่ดึงมาจาก API
   const [rooms, setRooms] = useState([]);
@@ -179,16 +184,47 @@ const ChooseRoom = () => {
 
         {/* ฝั่งขวา - ตารางแสดงห้องที่ตรงกับตัวเลือก */}
         <div className="flex flex-col space-y-6 pr-6">
-          {/* ค้นหาห้อง */}
-          <div className="relative">
-            <input
-              type="text"
-              className="input input-bordered rounded-2xl w-full pl-12 text-gray-800 bg-white border border-gray-300 drop-shadow-lg"
-              placeholder="ค้นหาห้อง..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <FaSearch className="absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-500" />
+          {/* ค้นหาห้อง พร้อมเลือกวันและเวลา */}
+          <div className="flex space-x-4 items-center">
+            {/* ช่องค้นหาห้อง */}
+            <div className="relative w-1/3">
+              <input
+                type="text"
+                className="input input-bordered rounded-2xl w-full pl-12 text-gray-800 bg-white border border-gray-300 drop-shadow-lg"
+                placeholder="ค้นหาห้อง..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <FaSearch className="absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-500" />
+            </div>
+
+            {/* ตัวเลือกวันที่ */}
+            <div className="relative w-1/3">
+              <DatePicker
+                selected={selectedDate}
+                onChange={(date) => setSelectedDate(date)}
+                dateFormat="yyyy-MM-dd"
+                className="select select-bordered rounded-2xl w-full bg-white border border-gray-300 drop-shadow-lg"
+                placeholderText="เลือกวันที่"
+              />
+              <FaCalendarAlt className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-800" />
+            </div>
+
+            {/* ตัวเลือกเวลา */}
+            <div className="relative w-1/3">
+              <DatePicker
+                selected={selectedTime}
+                onChange={(time) => setSelectedTime(time)}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={30}
+                timeFormat="HH:mm"
+                dateFormat="HH:mm"
+                className="select select-bordered rounded-2xl w-full bg-white border border-gray-300 drop-shadow-lg"
+                placeholderText="เลือกเวลา"
+              />
+              <FaClock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-800" />
+            </div>
           </div>
 
           {/* ตารางแสดงห้อง */}

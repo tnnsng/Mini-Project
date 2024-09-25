@@ -132,15 +132,17 @@ const Menu = () => {
             </Link>
           )}
 
-          <Link
-            to={"/main/booking-history"}
-            className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
-              selectedMenu === "booking-history" ? "bg-red-700" : ""
-            }`}
-            onClick={() => handleMenuSelect("booking-history")}
-          >
-            <FaClipboardList className="mr-2 text-lg" /> Booking History
-          </Link>
+          {hasPermission("PER01") && (
+            <Link
+              to={"/main/booking-history"}
+              className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
+                selectedMenu === "booking-history" ? "bg-red-700" : ""
+              }`}
+              onClick={() => handleMenuSelect("booking-history")}
+            >
+              <FaClipboardList className="mr-2 text-lg" /> Booking History
+            </Link>
+          )}
 
           {hasPermission("PER02") && (
             <Link

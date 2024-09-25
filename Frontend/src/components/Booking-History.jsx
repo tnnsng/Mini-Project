@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { GiCancel } from "react-icons/gi";
+import { Link } from "react-router-dom";
 
 const BookingHistory = () => {
   const empID = localStorage.getItem("emp_id");
@@ -56,8 +57,18 @@ const BookingHistory = () => {
                   <td>{booking.APP_NAME}</td>
                   <td>{booking.NUM}</td>
                   <td>
-                    <button className="text-red-900">
-                      <GiCancel className="text-4xl hover:text-red-950" />
+                    <button
+                      className="text-red-900"
+                      onClick={() => {
+                        localStorage.setItem(
+                          "selectedRoomBooking",
+                          JSON.stringify(booking)
+                        );
+                      }}
+                    >
+                      <Link to={`cancel-booking/${booking.ROOM_NAME}`}>
+                        <GiCancel className="text-4xl hover:text-red-950" />
+                      </Link>
                     </button>
                   </td>
                 </tr>

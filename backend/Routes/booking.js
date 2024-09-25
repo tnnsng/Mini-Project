@@ -23,9 +23,28 @@ router.get("/booking", async (req, res) => {
 
     // ดึงข้อมูลจากตาราง
     const result = await connection.execute(
-      `SELECT book_id, book_date, startdate, enddate, r.room_id, r.room_name, app.app_name, emp.emp_id, emp.fname, emp.lname ,q.num
+      `SELECT book_id, 
+              book_date, 
+              startdate, 
+              enddate, 
+              r.room_id, 
+              r.room_name, 
+              app.app_name, 
+              emp.emp_id, 
+              emp.fname, 
+              emp.lname ,        
+              q.num,
+              r.type_id,
+              t.type_name,
+              r.floor_id,
+              f.floor_name,
+              r.build_id,
+              b.build_name
         FROM BOOKING b
         JOIN room r ON r.room_id = b.room_id
+        JOIN type t ON r.type_id = t.type_id
+        JOIN build b ON b.build_id = r.build_id
+        JOIN floor f ON f.floor_id = r.floor_id
         JOIN statusapproved app ON app.app_id = b.app_id
         JOIN employee emp ON emp.emp_id = b.emp_id
         JOIN qrcode q ON q.book_ID = b.book_id`
@@ -243,13 +262,11 @@ router.post("/booking", async (req, res) => {
 
     await connection.commit();
 
-    res
-      .status(201)
-      .json({
-        message: "Booking created successfully",
-        book_id,
-        qr_code: randomNumber,
-      });
+    res.status(201).json({
+      message: "Booking created successfully",
+      book_id,
+      qr_code: randomNumber,
+    });
   } catch (err) {
     console.error("Error executing query", err);
     res.status(500).json({ error: "Internal Server Error" });

@@ -13,6 +13,7 @@ import AddFloor from "../components/AddFloor.jsx";
 import User from "../components/User.jsx";
 import Waiting from "../components/WaitingApprove.jsx";
 import AddPermission from "../components/AddPermission.jsx";
+import CancelBooking from "../components/Cancel-Booking.jsx";
 
 function Main() {
   return (
@@ -33,6 +34,11 @@ function Main() {
             element={<BookingDetail />}
           />
           <Route path="booking-history" element={<BookingHistory />} />
+          <Route
+            path="booking-history/cancel-booking/:roomName"
+            element={<CancelBooking />}
+          />
+
           <Route path="report" element={<Report />} />
           <Route path="report-meeting" element={<ReportMeeting />} />
           <Route path="manage-room" element={<AddRoom />} />
