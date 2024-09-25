@@ -82,7 +82,7 @@ const BookingRoom = () => {
       });
 
       const result = await response.json();
-      console.log(result);
+      console.log(result.qr_code);
 
       if (response.ok) {
         if (room.TYPE_ID === "VIP") {
@@ -92,7 +92,7 @@ const BookingRoom = () => {
             text: "การจองห้อง VIP ของคุณจะต้องรอการอนุมัติก่อน",
           });
         } else {
-          const randomNumber = Math.floor(100000 + Math.random() * 900000);
+          const randomNumber = result.qr_code;
           const qrCodeDataURL = await QRCode.toDataURL(randomNumber.toString());
 
           Swal.fire({
