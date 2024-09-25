@@ -19,8 +19,8 @@ const ChooseRoom = () => {
 
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
+  const [booking, setBooking] = useState([]);
 
-  // State สำหรับจัดเก็บข้อมูลห้องที่ดึงมาจาก API
   const [rooms, setRooms] = useState([]);
 
   // useEffect สำหรับดึงข้อมูลห้องจาก API
@@ -57,7 +57,16 @@ const ChooseRoom = () => {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
       }
     };
+    const fetchBooking = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/booking");
+        setBooking(response.data); // เก็บข้อมูลห้องที่ได้จาก API
+      } catch (error) {
+        console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
+      }
+    };
 
+    fetchBooking();
     fetchBuild();
     fetchFloor();
     fetchType();
@@ -94,13 +103,32 @@ const ChooseRoom = () => {
         String(room.AMOUNT).toLowerCase().includes(searchQuery.toLowerCase())
       : true;
 
+    // ตรวจสอบการจองห้องในวันที่เลือก
+    const isRoomAvailable = selectedDate
+      ? !booking.some((b) => {
+          // ตรวจสอบว่ามี STARTDATE และรูปแบบที่ถูกต้อง
+          if (b.STARTDATE) {
+            const bookingDate = new Date(b.STARTDATE); // สร้าง Date object
+            if (!isNaN(bookingDate.getTime())) {
+              // ตรวจสอบว่าเป็นวันที่ที่ถูกต้อง
+              const bookingDateString = bookingDate.toISOString().slice(0, 10); // แปลงเป็นรูปแบบ YYYY-MM-DD
+              return (
+                b.ROOM_ID === room.ROOM_ID && bookingDateString !== selectedDate
+              ); // เช็คแค่วันที่
+            }
+          }
+          return false; // ถ้า STARTDATE ไม่มีหรือตรวจสอบไม่ผ่าน ให้ return false
+        })
+      : true;
+
     // Return เงื่อนไขการกรอง
     return (
       matchesRoomType &&
       matchesBuilding &&
       matchesFloor &&
       matchesAmount &&
-      matchesSearch
+      matchesSearch &&
+      isRoomAvailable
     );
   });
 
