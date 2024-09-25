@@ -19,6 +19,7 @@ import User from "./components/User.jsx";
 import Waiting from "./components/WaitingApprove.jsx";
 import AddUser from "./components/AddUser.jsx";
 import EditUser from "./components/EditUser.jsx";
+import UnlockUser from "./components/UnlockUser.jsx";
 
 const routes = [
   {
@@ -84,6 +85,10 @@ const routes = [
       {
         path: "waiting-approve",
         element: <Waiting />,
+      },
+      {
+        path: "unlock-user",
+        element: <UnlockUser />,
       },
     ],
   },
