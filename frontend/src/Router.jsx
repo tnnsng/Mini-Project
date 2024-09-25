@@ -18,6 +18,7 @@ import "./index.css";
 import User from "./components/User.jsx";
 import Waiting from "./components/WaitingApprove.jsx";
 import Addpermission from "./components/Addpermission.jsx";
+import UseRoom from "./components/UseRoom.jsx";
 
 const routes = [
   {
@@ -79,6 +80,10 @@ const routes = [
       {
         path: "manage-permission",
         element: <Addpermission />,
+      },
+      {
+        path: "use-room",
+        element: <UseRoom />,
       },
     ],
   },

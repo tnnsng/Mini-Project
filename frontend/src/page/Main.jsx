@@ -13,6 +13,7 @@ import AddFloor from "../components/AddFloor.jsx";
 import User from "../components/User.jsx";
 import Waiting from "../components/WaitingApprove.jsx";
 import Addpermission from "../components/Addpermission.jsx";
+import UseRoom from "../components/UseRoom.jsx";
 
 function Main() {
   return (
@@ -42,6 +43,7 @@ function Main() {
           <Route path="manage-user" element={<User />} />
           <Route path="waiting-approve" element={<Waiting />} />
           <Route path="manage-permission" element={<Addpermission />} />
+          <Route path="use-room" element={<UseRoom />} />
         </Routes>
       </main>
     </div>

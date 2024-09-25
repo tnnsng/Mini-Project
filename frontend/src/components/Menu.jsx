@@ -9,6 +9,7 @@ import {
   FaUsersCog,
   FaUserTag,
   FaDoorClosed,
+  FaWalking,
 } from "react-icons/fa"; // Added new icons
 import { GoTriangleRight } from "react-icons/go";
 import { IoHome } from "react-icons/io5";
@@ -209,6 +210,16 @@ const Menu = () => {
             onClick={() => handleMenuSelect("manage-position")}
           >
             <FaUserTag className="mr-2 text-lg" /> Manage Position
+          </Link>
+
+          <Link
+            to={"/main/use-room"}
+            className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
+              selectedMenu === "manage-position" ? "bg-red-700" : ""
+            }`}
+            onClick={() => handleMenuSelect("manage-position")}
+          >
+            <FaWalking  className="mr-2 text-lg" /> Use Room
           </Link>
 
           <li
