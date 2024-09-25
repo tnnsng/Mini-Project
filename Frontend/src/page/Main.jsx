@@ -14,6 +14,8 @@ import User from "../components/User.jsx";
 import Waiting from "../components/WaitingApprove.jsx";
 import AddUser from "../components/AddUser.jsx";
 import EditUser from "../components/EditUser.jsx";
+import UnlockUser from "../components/UnlockUser.jsx";
+
 
 function Main() {
   return (
@@ -44,6 +46,7 @@ function Main() {
           <Route path="waiting-approve" element={<Waiting />} />
           <Route path="add-user" element={<AddUser />} />
           <Route path="edit-user/:id" element={<EditUser />} />
+          <Route path="unlock-user" element={<UnlockUser />} />
         </Routes>
       </main>
     </div>
