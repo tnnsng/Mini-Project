@@ -29,7 +29,7 @@ const UseRoom = () => {
         Swal.fire({
           icon: "success",
           title: "เข้าใช้ห้องสำเร็จ!",
-          html: `ห้อง : ${response.data[0].ROOM_NAME} <br> วันและเวลาที่เข้าใช้ : ${formattedDate} ${formattedTime}`,
+          html: `ห้อง : ${response.data[0].ROOM_NAME} <br> วันที่เข้าใช้ : ${formattedDate} <br> เวลาที่เข้าใช้ :  ${formattedTime}`,
           confirmButtonText: "OK",
         }).then(() => {
           navigate("/main/home");

@@ -321,9 +321,7 @@ const ChooseRoom = () => {
                             );
                           }}
                         >
-                          <Link to={`booking-detail/${room.ROOM_NAME}`}>
-                            More Details
-                          </Link>
+                          <Link to={`booking-room/${room.ROOM_NAME}`}>จอง</Link>
                         </button>
                       </td>
                     </tr>
