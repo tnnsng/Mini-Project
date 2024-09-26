@@ -95,6 +95,7 @@ const BookingHistory = () => {
                     >
                       <Link to={`cancel-booking/${booking.ROOM_NAME}`}>
                         <GiCancel className="text-4xl hover:text-red-950" />
+                        ยกเลิก
                       </Link>
                     </button>
                   </td>

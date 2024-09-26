@@ -187,7 +187,7 @@ const BookingRoom = () => {
           <label className="relative">
             <input
               type="text"
-              className="input input-bordered rounded-xl w-full bg-white drop-shadow-lg text-xl text-gray-800 pl-14"
+              className="input rounded-xl w-full bg-white text-xl text-gray-800 pl-14"
               value={` : ${room.TYPE_NAME}`}
               readOnly
             />
@@ -199,7 +199,7 @@ const BookingRoom = () => {
           <label className="relative">
             <input
               type="text"
-              className="input input-bordered rounded-xl w-full bg-white drop-shadow-lg text-xl text-gray-800 pl-14"
+              className="input rounded-xl w-full bg-white text-xl text-gray-800 pl-14"
               value={` : ${room.FLOOR_NAME}-${room.BUILD_NAME}`}
               readOnly
             />
@@ -211,7 +211,7 @@ const BookingRoom = () => {
           <label className="relative">
             <input
               type="text"
-              className="input input-bordered rounded-xl w-full bg-white drop-shadow-lg text-xl text-gray-800 pl-14"
+              className="input rounded-xl w-full bg-white text-xl text-gray-800 pl-14"
               value={` : ${room.ROOM_NAME}`}
               readOnly
             />

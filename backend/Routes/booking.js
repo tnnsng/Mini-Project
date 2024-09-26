@@ -87,6 +87,67 @@ router.get("/booking", async (req, res) => {
   }
 });
 
+router.get("/waitapprove", async (req, res) => {
+  let connection;
+  try {
+    connection = await getDbConnection();
+
+    // ดึงข้อมูลจากตาราง
+    const result = await connection.execute(
+      `SELECT B.BOOK_ID, 
+              B.ROOM_ID,
+              R.ROOM_NAME,
+              BU.BUILD_NAME,
+              F.FLOOR_NAME,
+              B.STARTDATE,
+              B.ENDDATE,
+              E.EMP_ID
+       FROM BOOKING B
+       JOIN ROOM R ON B.ROOM_ID = R.ROOM_ID
+       JOIN BUILD BU ON R.BUILD_ID = BU.BUILD_ID
+       JOIN FLOOR F ON R.FLOOR_ID = F.FLOOR_ID
+       JOIN EMPLOYEE E ON R.EMP_ID = E.EMP_ID
+       WHERE B.APP_ID = 'SA002'
+       ORDER BY B.BOOK_ID`
+    );
+
+    // กำหนดชื่อคอลัมน์ (header) จาก metadata ของคอลัมน์ใน result
+    const headers = result.metaData.map((col) => col.name);
+
+    // แปลงแถวข้อมูลเป็น JSON
+    const rows = result.rows.map((row) => {
+      let rowData = {};
+      row.forEach((cell, index) => {
+        rowData[headers[index]] = cell;
+      });
+
+      // แปลง startdate และ enddate เป็นเขตเวลา Bangkok
+      rowData.STARTDATE = moment(rowData.STARTDATE)
+        .tz("Asia/Bangkok")
+        .format("DD-MM-YYYY HH:mm");
+      rowData.ENDDATE = moment(rowData.ENDDATE)
+        .tz("Asia/Bangkok")
+        .format("DD-MM-YYYY HH:mm");
+
+      return rowData;
+    });
+
+    // ส่งผลลัพธ์เป็น JSON
+    res.json(rows);
+  } catch (err) {
+    console.error("Error executing query", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error("Error closing connection", err);
+      }
+    }
+  }
+});
+
 router.post("/oldBooking", async (req, res) => {
   let connection;
   try {

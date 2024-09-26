@@ -286,7 +286,7 @@ const Menu = () => {
           )}
         </ul>
         <button
-          className="logout-btn flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-lg w-full mt-auto"
+          className="logout-btn flex items-center justify-start bottom-0 pl-2 p-3 cursor-pointer hover:bg-red-700 text-lg w-full mt-auto"
           onClick={handleLogout}
         >
           <FaSignOutAlt className="mr-2 text-lg" />
