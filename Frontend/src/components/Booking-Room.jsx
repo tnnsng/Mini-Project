@@ -188,7 +188,7 @@ const BookingRoom = () => {
             <input
               type="text"
               className="input input-bordered rounded-xl w-full bg-white drop-shadow-lg text-xl text-gray-800 pl-14"
-              value={`ประเภทห้อง : ${room.TYPE_NAME}`}
+              value={` : ${room.TYPE_NAME}`}
               readOnly
             />
             <FaDoorClosed className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-800 text-4xl" />
@@ -200,7 +200,7 @@ const BookingRoom = () => {
             <input
               type="text"
               className="input input-bordered rounded-xl w-full bg-white drop-shadow-lg text-xl text-gray-800 pl-14"
-              value={`ตึก : ${room.BUILD_NAME} ชั้น : ${room.FLOOR_NAME}`}
+              value={` : ${room.FLOOR_NAME}-${room.BUILD_NAME}`}
               readOnly
             />
             <FaBuilding className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-800 text-3xl" />
@@ -212,7 +212,7 @@ const BookingRoom = () => {
             <input
               type="text"
               className="input input-bordered rounded-xl w-full bg-white drop-shadow-lg text-xl text-gray-800 pl-14"
-              value={`ห้อง : ${room.ROOM_NAME}`}
+              value={` : ${room.ROOM_NAME}`}
               readOnly
             />
             <FaDoorOpen className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-800 text-4xl" />

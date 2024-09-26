@@ -9,6 +9,7 @@ import {
   FaUsersCog,
   FaUserTag,
   FaDoorClosed,
+  FaWalking,
 } from "react-icons/fa"; // Added new icons
 import { GoTriangleRight } from "react-icons/go";
 import { IoHome } from "react-icons/io5";
@@ -116,7 +117,8 @@ const Menu = () => {
         </div>
       </div>
 
-      <div className="controls flex flex-col flex-grow">
+      {/* ใช้ flex-grow เพื่อให้เมนูเลื่อนขึ้นลง */}
+      <div className="controls flex-grow overflow-y-auto">
         <ul className="menu flex-grow">
           {hasPermission("PER01") && (
             <Link
@@ -143,6 +145,16 @@ const Menu = () => {
               <FaClipboardList className="mr-2 text-lg" /> Booking History
             </Link>
           )}
+
+          <Link
+            to={"/main/use-room"}
+            className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
+              selectedMenu === "use-room" ? "bg-red-700" : ""
+            }`}
+            onClick={() => handleMenuSelect("use-room")}
+          >
+            <FaWalking className="mr-2 text-lg" /> Use Room
+          </Link>
 
           {hasPermission("PER02") && (
             <Link
@@ -273,6 +285,7 @@ const Menu = () => {
             </li>
           )}
         </ul>
+        {/* ปุ่ม Logout ที่อยู่ด้านล่างสุด */}
         <button
           className="logout-btn flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-lg w-full mt-auto"
           onClick={handleLogout}

@@ -14,14 +14,17 @@ import User from "../components/User.jsx";
 import Waiting from "../components/WaitingApprove.jsx";
 import AddPermission from "../components/AddPermission.jsx";
 import CancelBooking from "../components/Cancel-Booking.jsx";
+import UseRoom from "../components/UseRoom.jsx";
 
 function Main() {
   return (
     <div className="h-screen flex transition-all duration-300 overflow-hidden">
       <aside
-        className={`fixed h-full bg-gray-800 z-50 transition-transform duration-300 ease-in-out transform translate-x-0 w-52`}
+        className={`fixed h-screen bg-gray-800 z-50 transition-transform duration-300 ease-in-out transform translate-x-0 w-52`}
       >
-        <Menu />
+        <div className="flex flex-col h-full">
+          <Menu />
+        </div>
       </aside>
 
       {/* Main content area */}
@@ -48,6 +51,7 @@ function Main() {
           <Route path="manage-user" element={<User />} />
           <Route path="waiting-approve" element={<Waiting />} />
           <Route path="manage-permission" element={<AddPermission />} />
+          <Route path="use-room" element={<UseRoom />} />
         </Routes>
       </main>
     </div>

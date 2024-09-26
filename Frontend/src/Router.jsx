@@ -20,6 +20,7 @@ import Waiting from "./components/WaitingApprove.jsx";
 import AddPermission from "./components/AddPermission.jsx";
 import BookingHistory from "./components/Booking-History.jsx";
 import CancelBooking from "./components/Cancel-Booking.jsx";
+import UseRoom from "./components/UseRoom.jsx";
 
 const routes = [
   {
@@ -91,6 +92,10 @@ const routes = [
       {
         path: "manage-permission",
         element: <AddPermission />,
+      },
+      {
+        path: "use-room",
+        element: <UseRoom />,
       },
     ],
   },

@@ -103,23 +103,44 @@ const ChooseRoom = () => {
         String(room.AMOUNT).toLowerCase().includes(searchQuery.toLowerCase())
       : true;
 
-    // ตรวจสอบการจองห้องในวันที่เลือก
-    const isRoomAvailable = selectedDate
-      ? !booking.some((b) => {
-          // ตรวจสอบว่ามี STARTDATE และรูปแบบที่ถูกต้อง
-          if (b.STARTDATE) {
-            const bookingDate = new Date(b.STARTDATE); // สร้าง Date object
-            if (!isNaN(bookingDate.getTime())) {
-              // ตรวจสอบว่าเป็นวันที่ที่ถูกต้อง
-              const bookingDateString = bookingDate.toISOString().slice(0, 10); // แปลงเป็นรูปแบบ YYYY-MM-DD
-              return (
-                b.ROOM_ID === room.ROOM_ID && bookingDateString !== selectedDate
-              ); // เช็คแค่วันที่
-            }
+    const isRoomAvailable = (room) => {
+      const formatDateTime = (date, time) => {
+        const day = date.getDate().toString().padStart(2, "0");
+        const month = (date.getMonth() + 1).toString().padStart(2, "0"); // เดือนใน JavaScript เริ่มต้นที่ 0
+        const year = date.getFullYear();
+
+        const hours = time.getHours().toString().padStart(2, "0");
+        const minutes = time.getMinutes().toString().padStart(2, "0");
+
+        return `${day}-${month}-${year} ${hours}:${minutes}`;
+      };
+
+      return !booking.some((b) => {
+        if (b.ROOM_ID === room.ROOM_ID) {
+          const startDateTime = b.STARTDATE; // แปลง STARTDATE เป็น Date object
+          const endDateTime = b.ENDDATE; // แปลง ENDDATE เป็น Date object
+
+          // ตรวจสอบว่า selectedDate และ selectedTime มีค่าไหม
+          if (selectedDate && selectedTime) {
+            const selectedDateTime = formatDateTime(selectedDate, selectedTime);
+
+            console.log(selectedDateTime);
+            // ตรวจสอบว่าช่วงเวลาที่เลือกตรงกับช่วงเวลาที่มีการจองหรือไม่
+            return (
+              selectedDateTime >= startDateTime &&
+              selectedDateTime <= endDateTime
+            );
           }
-          return false; // ถ้า STARTDATE ไม่มีหรือตรวจสอบไม่ผ่าน ให้ return false
-        })
-      : true;
+          console.log(startDateTime);
+          console.log(endDateTime);
+
+          return false;
+        }
+        return false;
+      });
+    };
+
+    const roomIsAvailable = isRoomAvailable(room);
 
     // Return เงื่อนไขการกรอง
     return (
@@ -128,7 +149,7 @@ const ChooseRoom = () => {
       matchesFloor &&
       matchesAmount &&
       matchesSearch &&
-      isRoomAvailable
+      roomIsAvailable
     );
   });
 
@@ -231,7 +252,7 @@ const ChooseRoom = () => {
               <DatePicker
                 selected={selectedDate}
                 onChange={(date) => setSelectedDate(date)}
-                dateFormat="yyyy-MM-dd"
+                dateFormat="dd-MM-yyyy"
                 className="select select-bordered rounded-2xl w-full bg-white border border-gray-300 drop-shadow-lg"
                 placeholderText="เลือกวันที่"
               />
