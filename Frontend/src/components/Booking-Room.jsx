@@ -64,6 +64,16 @@ const BookingRoom = () => {
         endTime.getMinutes()
       );
 
+      // ตรวจสอบเวลาเริ่มต้นและเวลาสิ้นสุด
+      if (startDateTime >= endDateTime) {
+        Swal.fire({
+          icon: "error",
+          title: "เวลาไม่ถูกต้อง",
+          text: "เวลาสิ้นสุดต้องมากกว่าเวลาเริ่มต้น",
+        });
+        return;
+      }
+
       const formattedStartDate = formatDateToUniversal(startDateTime);
       const formattedEndDate = formatDateToUniversal(endDateTime);
 
@@ -82,15 +92,27 @@ const BookingRoom = () => {
       });
 
       const result = await response.json();
-      console.log(result);
+
+      if (!response.ok) {
+        Swal.fire({
+          icon: "error",
+          title: "เกิดข้อผิดพลาด",
+          text:
+            result.error ||
+            "เกิดข้อผิดพลาดขณะจองห้องประชุม กรุณาลองใหม่อีกครั้ง",
+        });
+        return;
+      }
 
       if (response.ok) {
-        if (room.TYPE_ID === "VIP") {
+        if (room.TYPE_ID === "T0002") {
           Swal.fire({
             icon: "info",
             title: "รอการอนุมัติ",
             text: "การจองห้อง VIP ของคุณจะต้องรอการอนุมัติก่อน",
           });
+
+          navigate("/main/booking-history");
         } else {
           const qrCodeDataURL = await QRCode.toDataURL(
             result.qr_code.toString()

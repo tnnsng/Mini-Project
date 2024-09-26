@@ -28,7 +28,8 @@ router.get("/booking", async (req, res) => {
               startdate, 
               enddate, 
               r.room_id, 
-              r.room_name, 
+              r.room_name,
+              app.app_id, 
               app.app_name, 
               emp.emp_id, 
               emp.fname, 
@@ -39,76 +40,16 @@ router.get("/booking", async (req, res) => {
               r.floor_id,
               f.floor_name,
               r.build_id,
-              b.build_name
+              bu.build_name
         FROM BOOKING b
         JOIN room r ON r.room_id = b.room_id
         JOIN type t ON r.type_id = t.type_id
-        JOIN build b ON b.build_id = r.build_id
+        JOIN build bu ON bu.build_id = r.build_id
         JOIN floor f ON f.floor_id = r.floor_id
         JOIN statusapproved app ON app.app_id = b.app_id
         JOIN employee emp ON emp.emp_id = b.emp_id
-        JOIN qrcode q ON q.book_ID = b.book_id`
-    );
-
-    // กำหนดชื่อคอลัมน์ (header) จาก metadata ของคอลัมน์ใน result
-    const headers = result.metaData.map((col) => col.name);
-
-    // แปลงแถวข้อมูลเป็น JSON
-    const rows = result.rows.map((row) => {
-      let rowData = {};
-      row.forEach((cell, index) => {
-        rowData[headers[index]] = cell;
-      });
-
-      // แปลง startdate และ enddate เป็นเขตเวลา Bangkok
-      rowData.STARTDATE = moment(rowData.STARTDATE)
-        .tz("Asia/Bangkok")
-        .format("DD-MM-YYYY HH:mm");
-      rowData.ENDDATE = moment(rowData.ENDDATE)
-        .tz("Asia/Bangkok")
-        .format("DD-MM-YYYY HH:mm");
-
-      return rowData;
-    });
-
-    // ส่งผลลัพธ์เป็น JSON
-    res.json(rows);
-  } catch (err) {
-    console.error("Error executing query", err);
-    res.status(500).json({ error: "Internal Server Error" });
-  } finally {
-    if (connection) {
-      try {
-        await connection.close();
-      } catch (err) {
-        console.error("Error closing connection", err);
-      }
-    }
-  }
-});
-
-router.get("/waitapprove", async (req, res) => {
-  let connection;
-  try {
-    connection = await getDbConnection();
-
-    // ดึงข้อมูลจากตาราง
-    const result = await connection.execute(
-      `SELECT B.BOOK_ID, 
-              B.ROOM_ID,
-              R.ROOM_NAME,
-              BU.BUILD_NAME,
-              F.FLOOR_NAME,
-              B.STARTDATE,
-              B.ENDDATE,
-              E.EMP_ID
-       FROM BOOKING B
-       JOIN ROOM R ON B.ROOM_ID = R.ROOM_ID
-       JOIN BUILD BU ON R.BUILD_ID = BU.BUILD_ID
-       JOIN FLOOR F ON R.FLOOR_ID = F.FLOOR_ID
-       JOIN EMPLOYEE E ON R.EMP_ID = E.EMP_ID
-       WHERE B.APP_ID = 'SA002'
-       ORDER BY B.BOOK_ID`
+        JOIN qrcode q ON q.book_ID = b.book_id
+        ORDER BY b.book_id`
     );
 
     // กำหนดชื่อคอลัมน์ (header) จาก metadata ของคอลัมน์ใน result
@@ -311,22 +252,39 @@ router.post("/booking", async (req, res) => {
       `SELECT book_seq.CURRVAL FROM dual`
     );
     const book_id = bookIdResult.rows[0][0];
-    const randomNumber = Math.floor(100000 + Math.random() * 900000);
 
-    await connection.execute(
-      `INSERT INTO  qrcode ( book_id, num ) VALUES ( :book_id, :num) `,
-      {
-        book_id: book_id,
-        num: randomNumber,
-      }
-    );
+    let randomNumber = null;
+
+    if (type_id === "T0001") {
+      // สำหรับประเภท T0001 เท่านั้นที่จะสร้าง QR Code
+      randomNumber = Math.floor(100000 + Math.random() * 900000);
+
+      await connection.execute(
+        `INSERT INTO  qrcode (book_id, num) VALUES (:book_id, :num)`,
+        {
+          book_id: book_id,
+          num: randomNumber,
+        }
+      );
+    } else if (type_id === "T0002") {
+      // QR code สำหรับห้องที่รออนุมัติ (T0002) จะเป็น NULL
+      let randomNumber = null;
+
+      await connection.execute(
+        `INSERT INTO  qrcode (book_id, num) VALUES (:book_id, :num)`,
+        {
+          book_id: book_id,
+          num: randomNumber,
+        }
+      );
+    }
 
     await connection.commit();
 
     res.status(201).json({
       message: "Booking created successfully",
       book_id,
-      qr_code: randomNumber,
+      qr_code: randomNumber, // จะเป็น null หากเป็น T0002
     });
   } catch (err) {
     console.error("Error executing query", err);

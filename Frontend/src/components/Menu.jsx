@@ -104,8 +104,9 @@ const Menu = () => {
   };
 
   return (
-    <div className="menu w-52 h-screen bg-red-900 text-white flex flex-col overflow-y-auto">
-      <div className="user-info p-4 flex items-center border-b border-white">
+    <div className="menu w-52 h-screen bg-red-900 text-white flex flex-col">
+      {/* User Info ส่วนบนสุด ตรึงอยู่กับที่ */}
+      <div className="user-info p-4 flex items-center border-b border-white sticky top-0 bg-red-900 z-10">
         <div className="icon-container flex items-center justify-center mr-4">
           <FaUser className="text-3xl text-red-900" />
         </div>
@@ -117,7 +118,7 @@ const Menu = () => {
         </div>
       </div>
 
-      {/* ใช้ flex-grow เพื่อให้เมนูเลื่อนขึ้นลง */}
+      {/* เมนูที่สามารถเลื่อนขึ้นลงได้ */}
       <div className="controls flex-grow overflow-y-auto">
         <ul className="menu flex-grow">
           {hasPermission("PER01") && (
@@ -285,14 +286,15 @@ const Menu = () => {
             </li>
           )}
         </ul>
-        <button
-          className="logout-btn flex items-center justify-start bottom-0 pl-2 p-3 cursor-pointer hover:bg-red-700 text-lg w-full mt-auto"
-          onClick={handleLogout}
-        >
-          <FaSignOutAlt className="mr-2 text-lg" />
-          Logout
-        </button>
       </div>
+      {/* ปุ่ม Logout ส่วนล่างสุด ตรึงอยู่กับที่ */}
+      <button
+        className="logout-btn flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-lg w-full bg-red-900 sticky bottom-0"
+        onClick={handleLogout}
+      >
+        <FaSignOutAlt className="mr-2 text-lg" />
+        Logout
+      </button>
     </div>
   );
 };

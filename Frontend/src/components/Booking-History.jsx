@@ -1,7 +1,7 @@
 //import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { GiCancel } from "react-icons/gi";
+import { MdCancel } from "react-icons/md";
 import { Link } from "react-router-dom";
 import QRCode from "qrcode";
 import Swal from "sweetalert2";
@@ -33,6 +33,16 @@ const BookingHistory = () => {
   const handleQrCode = async (e, booking) => {
     e.preventDefault();
 
+    // ตรวจสอบว่า booking.NUM เป็น null หรือไม่
+    if (booking.NUM === null) {
+      Swal.fire({
+        icon: "info",
+        title: "รอการอนุมัติ",
+        text: "การจองนี้ยังไม่ได้รับการอนุมัติ กรุณารอการอนุมัติเพื่อให้สามารถเข้าห้องได้",
+      });
+      return; // ออกจากฟังก์ชันหากยังไม่ได้รับการอนุมัติ
+    }
+
     // ใช้ booking.NUM ของ booking ที่คลิก
     const qrCodeDataURL = await QRCode.toDataURL(booking.NUM.toString());
 
@@ -63,6 +73,9 @@ const BookingHistory = () => {
               <th></th>
               <th>Room Name</th>
               <th>Status</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Time</th>
               <th>QR Code</th>
               <th>Cancel</th>
             </tr>
@@ -74,30 +87,52 @@ const BookingHistory = () => {
                   <td>{index + 1}</td>
                   <td>{booking.ROOM_NAME}</td>
                   <td>{booking.APP_NAME}</td>
+                  <td>{booking.STARTDATE.split(" ")[0]}</td>
+                  <td>{booking.ENDDATE.split(" ")[0]}</td>
                   <td>
-                    <button
-                      className=" bg-green-500 text-white py-2 px-4 rounded-2xl hover:bg-green-800"
-                      onClick={(e) => handleQrCode(e, booking)} // ส่ง booking เข้าไป
-                    >
-                      QR Code
-                    </button>
+                    {booking.STARTDATE.split(" ")[1]} -{" "}
+                    {booking.ENDDATE.split(" ")[1]}
+                  </td>
+                  <td>
+                    {booking.APP_ID === "SA002" ? (
+                      <button
+                        className="bg-yellow-500 text-white py-2 px-4 rounded-2xl hover:bg-yellow-800"
+                        onClick={(e) => handleQrCode(e, booking)}
+                      >
+                        รอการอนุมัติ
+                      </button>
+                    ) : booking.APP_ID === "SA005" ? (
+                      <button
+                        className="bg-gray-500 text-white py-2 px-4 rounded-2xl"
+                        disabled
+                      >
+                        โดนยกเลิก
+                      </button>
+                    ) : (
+                      <button
+                        className="bg-green-500 text-white py-2 px-4 rounded-2xl hover:bg-green-800"
+                        onClick={(e) => handleQrCode(e, booking)} // ส่ง booking เข้าไป
+                      >
+                        QR Code
+                      </button>
+                    )}
                   </td>
 
-                  <td>
-                    <button
-                      className="text-red-900"
-                      onClick={() => {
-                        localStorage.setItem(
-                          "selectedRoomBooking",
-                          JSON.stringify(booking)
-                        );
-                      }}
-                    >
-                      <Link to={`cancel-booking/${booking.ROOM_NAME}`}>
-                        <GiCancel className="text-4xl hover:text-red-950" />
-                        ยกเลิก
-                      </Link>
-                    </button>
+                  <td className="flex justify-center items-center">
+                    <Link to={`cancel-booking/${booking.ROOM_NAME}`}>
+                      <button
+                        className="bg-red-800 text-white py-2 px-4 rounded-2xl hover:bg-red-950 flex items-center gap-2"
+                        onClick={() => {
+                          localStorage.setItem(
+                            "selectedRoomBooking",
+                            JSON.stringify(booking)
+                          );
+                        }}
+                      >
+                        <MdCancel />
+                        <span>ยกเลิก</span>
+                      </button>
+                    </Link>
                   </td>
                 </tr>
               ))

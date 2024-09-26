@@ -2,17 +2,17 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
+import Swal from "sweetalert2";
 
 const Waiting = () => {
   const empID = localStorage.getItem("emp_id");
   const [waiting, setWaiting] = useState([]);
 
-  // useEffect สำหรับดึงข้อมูลห้องจาก API
   useEffect(() => {
     const fetchWaiting = async () => {
       try {
         const response = await axios.get("http://localhost:5000/waitapprove");
-        setWaiting(response.data); // เก็บข้อมูลห้องที่ได้จาก API
+        setWaiting(response.data);
       } catch (error) {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
       }
@@ -23,9 +23,100 @@ const Waiting = () => {
 
   const filteredWaiting = waiting.filter((waiting) => {
     const matchesWaiting = waiting.EMP_ID ? waiting.EMP_ID === empID : true;
-
     return matchesWaiting;
   });
+
+  const handleApprove = async (bookId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/approved/${bookId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorResult = await response.json();
+        Swal.fire({
+          icon: "error",
+          title: "เกิดข้อผิดพลาด",
+          text: errorResult.error || "เกิดข้อผิดพลาดในการอนุมัติ",
+        });
+        return;
+      }
+
+      Swal.fire({
+        icon: "success",
+        title: "เสร็จสิ้น",
+        text: "อนุมัติการจองสำเร็จ",
+      }).then(() => {
+        window.location.reload();
+      });
+    } catch (error) {
+      console.error("Error booking room:", error);
+      Swal.fire({
+        icon: "error",
+        title: "เกิดข้อผิดพลาด",
+        text: "เกิดข้อผิดพลาดขณะอนุมัติการจองห้องประชุม กรุณาลองใหม่อีกครั้ง",
+      });
+    }
+  };
+
+  const handleNotApprove = async (bookId) => {
+    const { value: reason } = await Swal.fire({
+      title: "เหตุผลในการไม่อนุมัติ",
+      input: "text",
+      inputPlaceholder: "กรุณากรอกเหตุผล...",
+      showCancelButton: true,
+      confirmButtonText: "ส่ง",
+      cancelButtonText: "ยกเลิก",
+      preConfirm: (value) => {
+        if (!value) {
+          Swal.showValidationMessage("กรุณากรอกเหตุผล!");
+        }
+      },
+    });
+
+    if (reason) {
+      try {
+        const response = await fetch("http://localhost:5000/not-approved", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            book_id: bookId,
+            reason: reason,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorResult = await response.json();
+          Swal.fire({
+            icon: "error",
+            title: "เกิดข้อผิดพลาด",
+            text: errorResult.error || "เกิดข้อผิดพลาดในการไม่อนุมัติ",
+          });
+          return;
+        }
+
+        Swal.fire({
+          icon: "success",
+          title: "เสร็จสิ้น",
+          text: "ไม่อนุมัติการจองสำเร็จ",
+        }).then(() => {
+          window.location.reload();
+        });
+      } catch (error) {
+        console.error("Error booking room:", error);
+        Swal.fire({
+          icon: "error",
+          title: "เกิดข้อผิดพลาด",
+          text: "เกิดข้อผิดพลาดขณะอนุมัติการจองห้องประชุม กรุณาลองใหม่อีกครั้ง",
+        });
+      }
+    }
+  };
 
   return (
     <div className="p-8 bg-white text-gray-800 min-h-screen">
@@ -57,12 +148,18 @@ const Waiting = () => {
                     waiting.ENDDATE.split(" ")[1]
                   }`}</td>
                   <td className="flex justify-center items-center">
-                    <button className="bg-green-500 text-white py-2 px-4 rounded-2xl hover:bg-green-800 mr-2 flex items-center gap-2">
+                    <button
+                      className="bg-green-500 text-white py-2 px-4 rounded-2xl hover:bg-green-800 mr-2 flex items-center gap-2"
+                      onClick={() => handleApprove(waiting.BOOK_ID)}
+                    >
                       <FaCheckCircle />
                       <span>อนุมัติ</span>
                     </button>
 
-                    <button className="bg-red-800 text-white py-2 px-4 rounded-2xl hover:bg-red-950 flex items-center gap-2">
+                    <button
+                      className="bg-red-800 text-white py-2 px-4 rounded-2xl hover:bg-red-950 flex items-center gap-2"
+                      onClick={() => handleNotApprove(waiting.BOOK_ID)}
+                    >
                       <MdCancel />
                       <span>ไม่อนุมัติ</span>
                     </button>
