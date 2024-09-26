@@ -285,7 +285,6 @@ const Menu = () => {
             </li>
           )}
         </ul>
-        {/* ปุ่ม Logout ที่อยู่ด้านล่างสุด */}
         <button
           className="logout-btn flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-lg w-full mt-auto"
           onClick={handleLogout}
