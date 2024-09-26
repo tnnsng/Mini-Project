@@ -35,6 +35,8 @@ const UseRoom = () => {
           errorMessage = "ไม่พบห้องตาม QR Code ที่ระบุ";
         } else if (error.response.status === 500) {
           errorMessage = "เกิดข้อผิดพลาดจากเซิร์ฟเวอร์ กรุณาลองใหม่อีกครั้ง";
+        } else if (error.response.status === 403) {
+          errorMessage = error.response.data.error;
         }
       } else if (error.request) {
         errorMessage = "ไม่สามารถติดต่อเซิร์ฟเวอร์ได้";
@@ -82,7 +84,7 @@ const UseRoom = () => {
           type="submit"
           className="btn btn-outline btn-error mt-4 px-4 w-full max-w-xs"
         >
-          เข้าถึง
+          Access
         </button>
       </form>
     </div>
