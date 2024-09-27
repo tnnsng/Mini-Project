@@ -67,13 +67,26 @@ router.post("/cancle/:id", async (req, res) => {
     // Connect to the database
     connection = await getDbConnection();
 
+
+    const timeCheck = await connection.execute(
+      `SELECT book_id 
+       FROM booking 
+       WHERE book_id = :book_id 
+       AND SYSDATE < startdate + INTERVAL '10' MINUTE`,
+      { book_id: id }
+    );
+    
+    const book_id = timeCheck.rows.length > 0 ? timeCheck.rows[0][0] : null;
+    if (!book_id) {
+      return res.status(401).json({ error: "Time Out" });
+    }
     // Insert cancellation record
     const result = await connection.execute(
       `INSERT INTO cancle (cancle_date, book_id, reason, emp_id)
        VALUES (TO_DATE(:cancle_date, 'YYYY-MM-DD HH24:MI'), :book_id, :reason, :emp_id)`,
       {
         cancle_date,
-        book_id: id,
+        book_id: book_id,
         reason,
         emp_id,
       }
