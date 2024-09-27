@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
 const UseRoom = () => {
   const [qrCode, setQrCode] = useState("");
-  const navigate = useNavigate();
 
   const fetchQr = async (code) => {
     try {
@@ -13,7 +11,7 @@ const UseRoom = () => {
         `http://localhost:5000/use-room/${code}`
       );
 
-      const dateUse = new Date(response.data[0].DATE_USE); // แปลงเป็น Date object
+      const dateUse = new Date(response.data[0].DATE_USE);
       const formattedDate = `${dateUse
         .getDate()
         .toString()
@@ -31,18 +29,23 @@ const UseRoom = () => {
           title: "เข้าใช้ห้องสำเร็จ!",
           html: `ห้อง : ${response.data[0].ROOM_NAME} <br> วันที่เข้าใช้ : ${formattedDate} <br> เวลาที่เข้าใช้ :  ${formattedTime}`,
           confirmButtonText: "OK",
-        }).then(() => {
-          navigate("/main/home");
         });
       }
     } catch (error) {
-      console.error("Error fetching QR Code:", error);
+      console.error(
+        "Error fetching QR Code:",
+        error.response?.data || error.message
+      );
 
       let errorMessage = "ไม่พบห้องที่ระบุหรือเกิดข้อผิดพลาดในการเชื่อมต่อ";
 
       if (error.response) {
-        if (error.response.status === 404) {
-          errorMessage = "ไม่พบห้องตาม QR Code ที่ระบุ";
+        if (error.response.status === 401) {
+          errorMessage =
+            error.response.data.error || "QR Code ไม่ถูกต้อง หรือหมดเวลาใช้งาน";
+          if (error.response.data.error === "Time Out") {
+            errorMessage = "ไม่สามารถเข้าใช้ห้องได้เพราะเลยเวลาที่กำหนด";
+          }
         } else if (error.response.status === 500) {
           errorMessage = "เกิดข้อผิดพลาดจากเซิร์ฟเวอร์ กรุณาลองใหม่อีกครั้ง";
         }

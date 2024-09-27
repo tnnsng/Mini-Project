@@ -131,9 +131,6 @@ const ChooseRoom = () => {
               selectedDateTime <= endDateTime
             );
           }
-          console.log(startDateTime);
-          console.log(endDateTime);
-
           return false;
         }
         return false;

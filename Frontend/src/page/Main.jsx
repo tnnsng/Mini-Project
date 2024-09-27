@@ -15,6 +15,7 @@ import Waiting from "../components/WaitingApprove.jsx";
 import AddPermission from "../components/AddPermission.jsx";
 import CancelBooking from "../components/Cancel-Booking.jsx";
 import UseRoom from "../components/UseRoom.jsx";
+import EditUser from "../components/EditUser.jsx";
 
 function Main() {
   return (
@@ -48,7 +49,10 @@ function Main() {
           <Route path="manage-building" element={<AddBuild />} />
           <Route path="manage-floor" element={<AddFloor />} />
           <Route path="edit-room" element={<EditRoom />} />
+
           <Route path="manage-user" element={<User />} />
+          <Route path="manage-user/edit-user/:empID" element={<EditUser />} />
+
           <Route path="waiting-approve" element={<Waiting />} />
           <Route path="manage-permission" element={<AddPermission />} />
           <Route path="use-room" element={<UseRoom />} />

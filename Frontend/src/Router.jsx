@@ -21,6 +21,7 @@ import AddPermission from "./components/AddPermission.jsx";
 import BookingHistory from "./components/Booking-History.jsx";
 import CancelBooking from "./components/Cancel-Booking.jsx";
 import UseRoom from "./components/UseRoom.jsx";
+import EditUser from "./components/EditUser.jsx";
 
 const routes = [
   {
@@ -84,6 +85,12 @@ const routes = [
       {
         path: "manage-user",
         element: <User />,
+        children: [
+          {
+            path: "edit-user/:empID",
+            element: <EditUser />,
+          },
+        ],
       },
       {
         path: "waiting-approve",
