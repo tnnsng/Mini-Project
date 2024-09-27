@@ -22,6 +22,8 @@ import BookingHistory from "./components/Booking-History.jsx";
 import CancelBooking from "./components/Cancel-Booking.jsx";
 import UseRoom from "./components/UseRoom.jsx";
 import EditUser from "./components/EditUser.jsx";
+import AddUser from "./components/AddUser.jsx";
+import UnlockUser from "./components/UnlockUser.jsx";
 
 const routes = [
   {
@@ -83,9 +85,17 @@ const routes = [
         element: <AddFloor />,
       },
       {
+        path: "unlock-user",
+        element: <UnlockUser />,
+      },
+      {
         path: "manage-user",
         element: <User />,
         children: [
+          {
+            path: "add-room",
+            element: <AddUser />,
+          },
           {
             path: "edit-user/:empID",
             element: <EditUser />,

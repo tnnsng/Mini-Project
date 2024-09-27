@@ -1,81 +1,54 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const EditUser = () => {
+const AddUser = () => {
   const [empId, setEmpId] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState(""); // Password is optional for editing
+  const [password, setPassword] = useState("");
   const [amount, setAmount] = useState(0);
   const [statusId, setStatusId] = useState("");
   const [posiId, setPosiId] = useState("");
   const [depId, setDepId] = useState("");
   const navigate = useNavigate();
-  const { empID } = useParams(); // Get the user ID from the route params
-
-  // Fetch the existing user data when the component mounts
-  useEffect(() => {
-    fetch(`http://localhost:5000/users/${empID}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch user data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setEmpId(data.EMP_ID);
-        setFname(data.FNAME);
-        setLname(data.LNAME);
-        setUsername(data.USERNAME);
-        setAmount(data.AMOUNT);
-        setStatusId(data.STATUS_ID);
-        setPosiId(data.POSI_ID);
-        setDepId(data.DEP_ID);
-        setPassword(data.PASSWORD);
-      })
-      .catch((error) => {
-        console.error("Error fetching user data:", error);
-        alert("Error fetching user data");
-      });
-  }, [empID]); // Use empID from useParams
 
   // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // User data to send to the API
-    const updatedUser = {
+    const newUser = {
       emp_id: empId,
       fname: fname,
       lname: lname,
       username: username,
-      password: password || undefined, // Optional, only update if changed
+      password: password,
       amount: amount,
       status_id: statusId,
       posi_id: posiId,
       dep_id: depId,
     };
 
-    fetch(`http://localhost:5000/user/${empID}`, {
-      // Use empID for the update
-      method: "PUT",
+    // API call to add user
+    fetch("http://localhost:5000/user", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(updatedUser),
+      body: JSON.stringify(newUser),
     })
       .then((response) => {
         if (response.ok) {
-          alert("แก้ไขผู้ใช้สำเร็จ!");
-          navigate("/main/manage-user");
+          alert("เพิ่มผู้ใช้สำเร็จ!");
+          navigate("/main/manage-user"); // Redirect back to the user management page
         } else {
-          alert("เกิดข้อผิดพลาดขณะแก้ไขผู้ใช้");
+          alert("เกิดข้อผิดพลาดขณะเพิ่มผู้ใช้");
         }
       })
       .catch((error) => {
-        console.error("Error updating user:", error);
-        alert("เกิดข้อผิดพลาดขณะแก้ไขผู้ใช้");
+        console.error("Error adding user:", error);
+        alert("เกิดข้อผิดพลาดขณะเพิ่มผู้ใช้");
       });
   };
 
@@ -89,22 +62,22 @@ const EditUser = () => {
         >
           &lt;
         </button>
-        <h1 className="text-3xl">แก้ไขผู้ใช้</h1>
+        <h1 className="text-3xl">เพิ่มผู้ใช้</h1>
       </div>
 
       {/* Form section */}
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-6 mb-10">
-          {/* Employee ID display */}
+          {/* Employee ID input */}
           <div>
             <label className="block mb-2 text-md">รหัสพนักงาน (EMP_ID)</label>
             <input
               type="text"
               value={empId}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
+              onChange={(e) => setEmpId(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
               placeholder="EMP_ID"
               required
-              disabled // Make it uneditable
             />
           </div>
 
@@ -115,7 +88,7 @@ const EditUser = () => {
               type="text"
               value={fname}
               onChange={(e) => setFname(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
+              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
               placeholder="ชื่อ"
               required
             />
@@ -128,7 +101,7 @@ const EditUser = () => {
               type="text"
               value={lname}
               onChange={(e) => setLname(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
+              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
               placeholder="นามสกุล"
               required
             />
@@ -141,21 +114,22 @@ const EditUser = () => {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
+              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
               placeholder="Username"
               required
             />
           </div>
 
-          {/* Password input (optional for editing) */}
+          {/* Password input */}
           <div>
             <label className="block mb-2 text-md">รหัสผ่าน (PASSWORD)</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
-              placeholder="กรุณาใส่รหัสผ่านใหม่หากต้องการเปลี่ยน"
+              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
+              placeholder="Password"
+              required
             />
           </div>
 
@@ -166,7 +140,7 @@ const EditUser = () => {
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
+              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
               placeholder="Amount"
               required
             />
@@ -179,7 +153,7 @@ const EditUser = () => {
               type="text"
               value={statusId}
               onChange={(e) => setStatusId(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
+              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
               placeholder="STATUS_ID"
               required
             />
@@ -191,7 +165,7 @@ const EditUser = () => {
             <select
               value={posiId}
               onChange={(e) => setPosiId(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
+              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
               required
             >
               <option value="">เลือกตำแหน่ง</option>
@@ -206,7 +180,7 @@ const EditUser = () => {
             <select
               value={depId}
               onChange={(e) => setDepId(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
+              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
               required
             >
               <option value="">เลือกแผนก</option>
@@ -220,9 +194,9 @@ const EditUser = () => {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="px-6 py-2 bg-yellow-500 text-white rounded-xl text-lg hover:bg-yellow-800"
+            className="px-6 py-2 bg-green-600 text-white text-xl rounded-xl hover:bg-green-800"
           >
-            แก้ไขผู้ใช้
+            เพิ่มผู้ใช้
           </button>
         </div>
       </form>
@@ -230,4 +204,4 @@ const EditUser = () => {
   );
 };
 
-export default EditUser;
+export default AddUser;

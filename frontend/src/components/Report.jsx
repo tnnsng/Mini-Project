@@ -60,7 +60,7 @@ const Report = () => {
     fetchDept();
     fetchLock();
     fetchReport(); // Fetch report data on component mount and date change
-  }, [selectedDate]); 
+  }, [selectedDate]);
 
   const filteredData = selectedDepartment
     ? dataLock.filter((item) => item.DEP_ID === selectedDepartment)
@@ -72,7 +72,7 @@ const Report = () => {
         <h1 className="text-3xl">Meeting Room Booking Report</h1>
       </div>
 
-      <div className="flex justify-center items-center">
+      <div className="flex justify-end items-center mb-2">
         <div className="flex flex-row">
           <label className="w-36 p-3 mt-1">Select Month:</label>
           <DatePicker
@@ -80,7 +80,7 @@ const Report = () => {
             onChange={handleDateChange}
             dateFormat="MM/yyyy"
             showMonthYearPicker
-            className="border max-w-xs p-2 my-2 bg-white"
+            className="border max-w-xs p-2 my-2 bg-white rounded-xl drop-shadow-lg"
           />
         </div>
       </div>
@@ -110,7 +110,7 @@ const Report = () => {
           <div className="flex items-center gap-6 mb-8">
             <h1 className="text-3xl">Employee Lock Report</h1>
           </div>
-          <div className="flex justify-end mb-2 mr-2 text-md">
+          <div className="flex justify-end mb-4 mr-2 text-md">
             <select
               className="select rounded-2xl w-1/4 bg-white border-1 border-gray-300 drop-shadow-xl"
               value={selectedDepartment}
@@ -124,7 +124,7 @@ const Report = () => {
               ))}
             </select>
           </div>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto border border-gray-800">
             <table className="table w-full">
               <thead className="text-gray-800 text-lg text-center">
                 <tr>

@@ -122,8 +122,8 @@ const User = () => {
 
       {/* Add New User Button */}
       <div className="flex justify-end mt-6">
-        <Link to="/main/add-user">
-          <button className="px-6 py-3 bg-red-700 text-white text-xl rounded-xl hover:bg-red-950">
+        <Link to="add-user">
+          <button className="px-6 py-2 bg-green-600 text-white text-xl rounded-xl hover:bg-green-800">
             เพิ่มผู้ใช้
           </button>
         </Link>

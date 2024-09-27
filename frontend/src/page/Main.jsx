@@ -16,6 +16,8 @@ import AddPermission from "../components/AddPermission.jsx";
 import CancelBooking from "../components/Cancel-Booking.jsx";
 import UseRoom from "../components/UseRoom.jsx";
 import EditUser from "../components/EditUser.jsx";
+import AddUser from "../components/AddUser.jsx";
+import UnlockUser from "../components/UnlockUser.jsx";
 
 function Main() {
   return (
@@ -51,9 +53,11 @@ function Main() {
           <Route path="edit-room" element={<EditRoom />} />
 
           <Route path="manage-user" element={<User />} />
+          <Route path="manage-user/add-user" element={<AddUser />} />
           <Route path="manage-user/edit-user/:empID" element={<EditUser />} />
 
           <Route path="waiting-approve" element={<Waiting />} />
+          <Route path="unlock-user" element={<UnlockUser />} />
           <Route path="manage-permission" element={<AddPermission />} />
           <Route path="use-room" element={<UseRoom />} />
         </Routes>
