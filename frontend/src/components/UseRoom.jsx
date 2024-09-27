@@ -49,6 +49,9 @@ const UseRoom = () => {
         } else if (error.response.status === 500) {
           errorMessage = "เกิดข้อผิดพลาดจากเซิร์ฟเวอร์ กรุณาลองใหม่อีกครั้ง";
         }
+       else if (error.response.status === 403) {
+        errorMessage = error.response.data.error;
+      }
       } else if (error.request) {
         errorMessage = "ไม่สามารถติดต่อเซิร์ฟเวอร์ได้";
       }

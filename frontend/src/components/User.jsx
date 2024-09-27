@@ -75,7 +75,7 @@ const User = () => {
           <tbody>
             {users.length > 0 ? (
               users.map((user) => (
-                <tr key={user.EMP_ID} className="text-center text-md">
+                <tr key={user.EMP_ID} className="text-center text-lg">
                   <td>{user.FNAME}</td>
                   <td>{user.LNAME}</td>
                   <td>{user.USERNAME}</td>
