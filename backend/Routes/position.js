@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const db = require("../Database/db");
 const oracledb = require("oracledb");
-
 // Function to get a database connection
 async function getDbConnection() {
   try {
@@ -13,18 +12,14 @@ async function getDbConnection() {
     throw err;
   }
 }
-
 router.get("/position", async (req, res) => {
   let connection;
   try {
     connection = await getDbConnection();
-
     // ดึงข้อมูลจากตาราง EMPLOYEE
     const result = await connection.execute("SELECT * FROM position");
-
     // กำหนดชื่อคอลัมน์ (header) จาก metadata ของคอลัมน์ใน result
     const headers = result.metaData.map((col) => col.name);
-
     // แปลงแถวข้อมูลเป็น JSON
     const rows = result.rows.map((row) => {
       let rowData = {};
@@ -33,7 +28,6 @@ router.get("/position", async (req, res) => {
       });
       return rowData;
     });
-
     // ส่งผลลัพธ์เป็น JSON
     res.json(rows);
   } catch (err) {
@@ -49,5 +43,4 @@ router.get("/position", async (req, res) => {
     }
   }
 });
-
 module.exports = router;

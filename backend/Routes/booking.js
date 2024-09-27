@@ -23,11 +23,33 @@ router.get("/booking", async (req, res) => {
 
     // ดึงข้อมูลจากตาราง
     const result = await connection.execute(
-      `SELECT book_id, book_date, startdate, enddate, r.room_id, r.room_name, app.app_name, emp.fname, emp.lname 
+      `SELECT book_id, 
+              book_date, 
+              startdate, 
+              enddate, 
+              r.room_id, 
+              r.room_name,
+              app.app_id, 
+              app.app_name, 
+              emp.emp_id, 
+              emp.fname, 
+              emp.lname ,        
+              q.num,
+              r.type_id,
+              t.type_name,
+              r.floor_id,
+              f.floor_name,
+              r.build_id,
+              bu.build_name
         FROM BOOKING b
         JOIN room r ON r.room_id = b.room_id
+        JOIN type t ON r.type_id = t.type_id
+        JOIN build bu ON bu.build_id = r.build_id
+        JOIN floor f ON f.floor_id = r.floor_id
         JOIN statusapproved app ON app.app_id = b.app_id
-        JOIN employee emp ON emp.emp_id = b.emp_id`
+        JOIN employee emp ON emp.emp_id = b.emp_id
+        JOIN qrcode q ON q.book_ID = b.book_id
+        ORDER BY b.book_id`
     );
 
     // กำหนดชื่อคอลัมน์ (header) จาก metadata ของคอลัมน์ใน result
@@ -67,10 +89,92 @@ router.get("/booking", async (req, res) => {
   }
 });
 
+router.post("/oldBooking", async (req, res) => {
+  let connection;
+  try {
+    const { book_date, startdate, enddate, room_id, app_id, emp_id } = req.body;
+
+    // เชื่อมต่อกับฐานข้อมูลก่อนทำการ query ใดๆ
+    connection = await getDbConnection();
+
+    // ค้นหาหมายเลขผู้ใช้ล่าสุด
+    const result = await connection.execute(
+      `SELECT BOOK_ID FROM (SELECT BOOK_ID FROM BOOKING ORDER BY BOOK_ID DESC) WHERE ROWNUM = 1`
+    );
+
+    let rows = result.rows;
+    let newBookingID = "B0001"; // ค่าปริยายถ้าไม่มีผู้ใช้ในฐานข้อมูล
+
+    if (rows.length > 0) {
+      const lastBookingID = rows[0][0]; // ดึง BOOK_ID จากแถวแรก
+      const lastNumber = parseInt(lastBookingID.substring(1), 10);
+      const newNumber = lastNumber + 1;
+      newBookingID = `B${newNumber.toString().padStart(4, "0")}`;
+    }
+
+    // Validate input data
+    if (
+      !newBookingID ||
+      !book_date ||
+      !startdate ||
+      !enddate ||
+      !room_id ||
+      !app_id ||
+      !emp_id
+    ) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    // Prepare the SQL query
+    const insertQuery = `
+      INSERT INTO booking 
+        (book_id, 
+        book_date, 
+        startdate, 
+        enddate, 
+        room_id, 
+        app_id, 
+        emp_id)
+      VALUES (:book_id, 
+      TO_DATE(:book_date, 'YYYY-MM-DD HH24:MI'), 
+      TO_DATE(:startdate, 'YYYY-MM-DD HH24:MI'), 
+      TO_DATE(:enddate, 'YYYY-MM-DD HH24:MI'), 
+      :room_id, :app_id, :emp_id)
+    `;
+
+    const resultInsert = await connection.execute(insertQuery, {
+      book_id: newBookingID,
+      book_date,
+      startdate,
+      enddate,
+      room_id,
+      app_id,
+      emp_id,
+    });
+
+    await connection.commit();
+
+    res.status(201).json({
+      message: "Booking created successfully",
+      book_id: newBookingID,
+    });
+  } catch (err) {
+    console.error("Error executing query", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error("Error closing connection", err);
+      }
+    }
+  }
+});
+
 router.post("/booking", async (req, res) => {
   let connection;
   try {
-
     const { book_date, startdate, enddate, room_id, emp_id } = req.body;
 
     // ตรวจสอบข้อมูลที่ส่งมา
@@ -80,7 +184,9 @@ router.post("/booking", async (req, res) => {
 
     // ตรวจสอบให้แน่ใจว่า startdate ต้องมาก่อน enddate
     if (new Date(startdate) >= new Date(enddate)) {
-      return res.status(400).json({ error: "Start date must be before end date" });
+      return res
+        .status(400)
+        .json({ error: "Start date must be before end date" });
     }
 
     connection = await getDbConnection();
@@ -122,7 +228,9 @@ router.post("/booking", async (req, res) => {
     );
 
     if (bookingCheck.rows.length > 0) {
-      return res.status(409).json({ error: "Booking conflicts with existing reservations" });
+      return res
+        .status(409)
+        .json({ error: "Booking conflicts with existing reservations" });
     }
 
     // แทรกข้อมูลการจอง
@@ -144,19 +252,40 @@ router.post("/booking", async (req, res) => {
       `SELECT book_seq.CURRVAL FROM dual`
     );
     const book_id = bookIdResult.rows[0][0];
-    const randomNumber = Math.floor(100000 + Math.random() * 900000);
 
-    await connection.execute(
-      `INSERT INTO  qrcode ( book_id, num ) VALUES ( :book_id, :num) `,
-      {
-        book_id: book_id,
-        num: randomNumber
-      });
+    let randomNumber = null;
 
+    if (type_id === "T0001") {
+      // สำหรับประเภท T0001 เท่านั้นที่จะสร้าง QR Code
+      randomNumber = Math.floor(100000 + Math.random() * 900000);
+
+      await connection.execute(
+        `INSERT INTO  qrcode (book_id, num) VALUES (:book_id, :num)`,
+        {
+          book_id: book_id,
+          num: randomNumber,
+        }
+      );
+    } else if (type_id === "T0002") {
+      // QR code สำหรับห้องที่รออนุมัติ (T0002) จะเป็น NULL
+      let randomNumber = null;
+
+      await connection.execute(
+        `INSERT INTO  qrcode (book_id, num) VALUES (:book_id, :num)`,
+        {
+          book_id: book_id,
+          num: randomNumber,
+        }
+      );
+    }
 
     await connection.commit();
 
-    res.status(201).json({ message: "Booking created successfully", book_id, qr_code: randomNumber});
+    res.status(201).json({
+      message: "Booking created successfully",
+      book_id,
+      qr_code: randomNumber, // จะเป็น null หากเป็น T0002
+    });
   } catch (err) {
     console.error("Error executing query", err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -170,7 +299,6 @@ router.post("/booking", async (req, res) => {
     }
   }
 });
-
 
 router.put("/booking/:id", async (req, res) => {
   let connection;
@@ -200,7 +328,7 @@ router.put("/booking/:id", async (req, res) => {
 
     // เตรียมคำสั่ง SQL สำหรับอัปเดต
     const result = await connection.execute(
-      `UPDATE booking SET 
+      `UPDATE Booking SET 
         book_date = TO_DATE(:book_date, 'YYYY-MM-DD HH24:MI'),
         startdate = TO_DATE(:startdate, 'YYYY-MM-DD HH24:MI'),
         enddate = TO_DATE(:enddate, 'YYYY-MM-DD HH24:MI'),

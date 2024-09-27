@@ -17,8 +17,11 @@ import AddFloor from "./components/AddFloor.jsx";
 import "./index.css";
 import User from "./components/User.jsx";
 import Waiting from "./components/WaitingApprove.jsx";
-import Addpermission from "./components/Addpermission.jsx";
+import AddPermission from "./components/AddPermission.jsx";
+import BookingHistory from "./components/Booking-History.jsx";
+import CancelBooking from "./components/Cancel-Booking.jsx";
 import UseRoom from "./components/UseRoom.jsx";
+import EditUser from "./components/EditUser.jsx";
 
 const routes = [
   {
@@ -54,7 +57,7 @@ const routes = [
       {
         path: "manage-room/*",
         element: <AddRoom />,
-        children:[
+        children: [
           {
             path: "edit-room",
             element: <EditRoom />,
@@ -66,12 +69,28 @@ const routes = [
         element: <AddBuild />,
       },
       {
+        path: "booking-history/*",
+        element: <BookingHistory />,
+        children: [
+          {
+            path: "cancel-booking/:roomName",
+            element: <CancelBooking />,
+          },
+        ],
+      },
+      {
         path: "manage-floor",
         element: <AddFloor />,
       },
       {
         path: "manage-user",
         element: <User />,
+        children: [
+          {
+            path: "edit-user/:empID",
+            element: <EditUser />,
+          },
+        ],
       },
       {
         path: "waiting-approve",
@@ -79,7 +98,7 @@ const routes = [
       },
       {
         path: "manage-permission",
-        element: <Addpermission />,
+        element: <AddPermission />,
       },
       {
         path: "use-room",

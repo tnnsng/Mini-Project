@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-
-const Addpermission = () => {
+const AddPermission = () => {
   const [positions, setPositions] = useState([]);
   const [permissions, setPermissions] = useState([]);
   const [selectedPosition, setSelectedPosition] = useState("");
   const [selectedPermissions, setSelectedPermissions] = useState({});
-
   useEffect(() => {
     const fetchPositions = async () => {
       try {
@@ -16,7 +14,6 @@ const Addpermission = () => {
         console.error("Error fetching positions:", error);
       }
     };
-
     const fetchPermissions = async () => {
       try {
         const response = await axios.get("http://localhost:5000/permission");
@@ -25,16 +22,16 @@ const Addpermission = () => {
         console.error("Error fetching permissions:", error);
       }
     };
-
     fetchPositions();
     fetchPermissions();
   }, []);
-
   useEffect(() => {
     const fetchPositionPermissions = async () => {
       if (selectedPosition) {
         try {
-          const response = await axios.get(`http://localhost:5000/perposition/${selectedPosition}`);
+          const response = await axios.get(
+            `http://localhost:5000/perposition/${selectedPosition}`
+          );
           const perms = response.data.reduce((acc, perm) => {
             acc[perm.PER_ID] = true; // ติ๊กถูกสิทธิ์ที่เกี่ยวข้อง
             return acc;
@@ -47,23 +44,18 @@ const Addpermission = () => {
         setSelectedPermissions({}); // ล้างเมื่อไม่มีการเลือกตำแหน่ง
       }
     };
-
     fetchPositionPermissions();
   }, [selectedPosition]);
-
   const handleCheckboxChange = (permId) => {
     setSelectedPermissions((prev) => ({
       ...prev,
       [permId]: !prev[permId], // สลับสถานะการติ๊ก
     }));
   };
-
   return (
     <div className="p-8 bg-white text-gray-800 min-h-screen">
-      <div className="grid grid-cols-1 gap-6 mb-10">
-        <div className="flex items-center gap-10 mb-6">
-          <h1 className="text-3xl">Permission</h1>
-        </div>
+      <div className="grid grid-cols-1 gap-6 mb-6">
+        <h1 className="text-3xl">Permission</h1>
       </div>
       <div>
         <label className="block text-lg font-medium mb-2">ตำแหน่ง</label>
@@ -81,27 +73,25 @@ const Addpermission = () => {
         </select>
       </div>
       {permissions.map((perm) => (
-        <div className="flex flex-row mt-6" key={perm.PER_ID}>
+        <div className="flex flex-row mt-6 " key={perm.PER_ID}>
           <div className="basis-1/4 md:basis-1/3 flex items-center">
             <input
               type="checkbox"
               checked={!!selectedPermissions[perm.PER_ID]}
               onChange={() => handleCheckboxChange(perm.PER_ID)}
-              className="checkbox mr-3"
+              className="checkbox mr-3 bg-gray-200"
               id={`perm-${perm.PER_ID}`}
             />
             <label htmlFor={`perm-${perm.PER_ID}`}>{perm.PER_NAME}</label>
           </div>
         </div>
       ))}
-
-      <div className="fixed bottom-4 right-4">
+      <div className="fixed bottom-6 right-4">
         <button className="bg-red-900 text-2xl text-center text-white py-2 px-6 rounded-xl hover:bg-red-950">
-          เพิ่ม
+          แก้ไขการใช้งาน
         </button>
       </div>
     </div>
   );
 };
-
-export default Addpermission;
+export default AddPermission;

@@ -34,8 +34,8 @@ function Login() {
 
           Swal.fire({
             icon: "success",
-            title: "Login Successful!",
-            text: `WELCOME : ${fname} ${lname}`,
+            title: "เข้าสู่ระบบสำเร็จ",
+            text: `ยินดีต้อนรับ : ${fname} ${lname}`,
             confirmButtonText: "OK",
           }).then(() => {
             navigate("/main/home");

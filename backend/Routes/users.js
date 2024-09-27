@@ -14,14 +14,22 @@ async function getDbConnection() {
   }
 }
 
-
 router.get("/users", async (req, res) => {
   let connection;
   try {
     connection = await getDbConnection();
 
     // ดึงข้อมูลจากตาราง EMPLOYEE
-    const result = await connection.execute("SELECT * FROM EMPLOYEE");
+    const result = await connection.execute(
+      `SELECT E.*, 
+              SE.STATUS_NAME, 
+              P.POSI_NAME, 
+              D.DEP_NAME
+      FROM EMPLOYEE E
+      JOIN STATUSEMP SE ON SE.STATUS_ID = E.STATUS_ID
+      JOIN POSITION P ON P.POSI_ID = E.POSI_ID
+      JOIN DEPARTMENT D ON D.DEP_ID = E.DEP_ID`
+    );
 
     // กำหนดชื่อคอลัมน์ (header) จาก metadata ของคอลัมน์ใน result
     const headers = result.metaData.map((col) => col.name);
@@ -51,6 +59,54 @@ router.get("/users", async (req, res) => {
   }
 });
 
+router.get("/users/:empID", async (req, res) => {
+  const empID = req.params.empID; // Get empID from the request parameters
+  let connection;
+  try {
+    connection = await getDbConnection();
+
+    // Query to fetch user data by empID
+    const result = await connection.execute(
+      `SELECT E.*, 
+              SE.STATUS_NAME, 
+              P.POSI_NAME, 
+              D.DEP_NAME
+      FROM EMPLOYEE E
+      JOIN STATUSEMP SE ON SE.STATUS_ID = E.STATUS_ID
+      JOIN POSITION P ON P.POSI_ID = E.POSI_ID
+      JOIN DEPARTMENT D ON D.DEP_ID = E.DEP_ID
+      WHERE E.EMP_ID = :empID`, // Use a parameterized query to prevent SQL injection
+      [empID]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" }); // Handle case where user does not exist
+    }
+
+    // Convert row data to JSON
+    const user = result.rows[0]; // Assuming only one user will be returned
+    const headers = result.metaData.map((col) => col.name);
+    let userData = {};
+    user.forEach((cell, index) => {
+      userData[headers[index]] = cell;
+    });
+
+    // Send user data as JSON
+    res.json(userData);
+  } catch (err) {
+    console.error("Error executing query", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error("Error closing connection", err);
+      }
+    }
+  }
+});
+
 router.post("/user", async (req, res) => {
   let connection;
   try {
@@ -63,11 +119,21 @@ router.post("/user", async (req, res) => {
       amount,
       status_id,
       posi_id,
-      dep_id
+      dep_id,
     } = req.body;
 
     // Validate input data
-    if (!emp_id || !fname || !lname || !username || !password || amount === undefined || !status_id || !posi_id || !dep_id) {
+    if (
+      !emp_id ||
+      !fname ||
+      !lname ||
+      !username ||
+      !password ||
+      amount === undefined ||
+      !status_id ||
+      !posi_id ||
+      !dep_id
+    ) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
@@ -77,7 +143,17 @@ router.post("/user", async (req, res) => {
     const result = await connection.execute(
       `INSERT INTO employee (emp_id, fname, lname, username, password, amount, status_id, posi_id, dep_id)
       VALUES (:emp_id, :fname, :lname, :username, :password, :amount, :status_id, :posi_id, :dep_id)`,
-      {emp_id, fname, lname, username, password, amount, status_id, posi_id, dep_id}
+      {
+        emp_id,
+        fname,
+        lname,
+        username,
+        password,
+        amount,
+        status_id,
+        posi_id,
+        dep_id,
+      }
     );
 
     const affectedRows = result.affectedRows || 0; // Adjust according to your database library
@@ -85,7 +161,9 @@ router.post("/user", async (req, res) => {
     await connection.commit();
 
     // Respond with success
-    res.status(201).json({ message: "User created successfully", userId: emp_id });
+    res
+      .status(201)
+      .json({ message: "User created successfully", userId: emp_id });
   } catch (err) {
     console.error("Error executing query", err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -117,11 +195,20 @@ router.put("/user/:id", async (req, res) => {
       amount,
       status_id,
       posi_id,
-      dep_id
+      dep_id,
     } = req.body;
 
     // Validate input data
-    if ( !fname || !lname || !username || !password || amount === undefined || !status_id || !posi_id || !dep_id) {
+    if (
+      !fname ||
+      !lname ||
+      !username ||
+      !password ||
+      amount === undefined ||
+      !status_id ||
+      !posi_id ||
+      !dep_id
+    ) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
@@ -191,7 +278,7 @@ router.delete("/user/:id", async (req, res) => {
       `DELETE FROM employee WHERE emp_id = :emp_id`,
       { emp_id: id }
     );
-    
+
     await connection.commit();
     // Access rowsAffected directly from the result
     const affectedRows = result.rowsAffected;

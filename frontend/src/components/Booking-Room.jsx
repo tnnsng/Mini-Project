@@ -64,6 +64,16 @@ const BookingRoom = () => {
         endTime.getMinutes()
       );
 
+      // ตรวจสอบเวลาเริ่มต้นและเวลาสิ้นสุด
+      if (startDateTime >= endDateTime) {
+        Swal.fire({
+          icon: "error",
+          title: "เวลาไม่ถูกต้อง",
+          text: "เวลาสิ้นสุดต้องมากกว่าเวลาเริ่มต้น",
+        });
+        return;
+      }
+
       const formattedStartDate = formatDateToUniversal(startDateTime);
       const formattedEndDate = formatDateToUniversal(endDateTime);
 
@@ -82,18 +92,31 @@ const BookingRoom = () => {
       });
 
       const result = await response.json();
-      console.log(result.qr_code);
+
+      if (!response.ok) {
+        Swal.fire({
+          icon: "error",
+          title: "เกิดข้อผิดพลาด",
+          text:
+            result.error ||
+            "เกิดข้อผิดพลาดขณะจองห้องประชุม กรุณาลองใหม่อีกครั้ง",
+        });
+        return;
+      }
 
       if (response.ok) {
-        if (room.TYPE_ID === "VIP") {
+        if (room.TYPE_ID === "T0002") {
           Swal.fire({
             icon: "info",
             title: "รอการอนุมัติ",
             text: "การจองห้อง VIP ของคุณจะต้องรอการอนุมัติก่อน",
           });
+
+          navigate("/main/booking-history");
         } else {
-          const randomNumber = result.qr_code;
-          const qrCodeDataURL = await QRCode.toDataURL(randomNumber.toString());
+          const qrCodeDataURL = await QRCode.toDataURL(
+            result.qr_code.toString()
+          );
 
           Swal.fire({
             icon: "success",
@@ -104,55 +127,13 @@ const BookingRoom = () => {
               <div style="display: flex; justify-content: center;">
                 <img src="${qrCodeDataURL}" alt="QR Code" style="max-width: 100%; height: auto;"/>
               </div>
-              <p>รหัสสำหรับการเข้าห้อง: <strong>${randomNumber}</strong></p>
+              <p>รหัสสำหรับการเข้าห้อง: <strong>${result.qr_code}</strong></p>
             `,
           });
 
           navigate("/main/booking-history");
-
-          // Insert ข้อมูล QR Code
-          /*const qrCodeResponse = await fetch("http://localhost:5000/qrcode", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              book_id: result.book_id,
-              num: randomNumber,
-            }),
-          });
-
-          if (qrCodeResponse.ok) {
-            // แสดงข้อความสำเร็จ
-            Swal.fire({
-              icon: "success",
-              title: "อนุมัติ",
-              html: `
-                <p>การจองห้องประชุมของคุณเสร็จสมบูรณ์แล้ว!</p>
-                <p>กรุณาใช้ QR Code ด้านล่างสำหรับการเข้าห้อง</p>
-                <div style="display: flex; justify-content: center;">
-                  <img src="${qrCodeDataURL}" alt="QR Code" style="max-width: 100%; height: auto;"/>
-                </div>
-                <p>รหัสสำหรับการเข้าห้อง: <strong>${randomNumber}</strong></p>
-              `,
-            });
-            
-          } else {
-            const qrCodeResult = await qrCodeResponse.json();
-            Swal.fire({
-              icon: "error",
-              title: "เกิดข้อผิดพลาดในการบันทึก QR Code",
-              text: qrCodeResult.error || "ไม่สามารถบันทึก QR Code ได้",
-            });*/
         }
       }
-      /*}else {
-        Swal.fire({
-          icon: "error",
-          title: "เกิดข้อผิดพลาด",
-          text: result.error || "ไม่สามารถจองห้องประชุมได้",
-        });
-      }*/
     } catch (error) {
       console.error("Error booking room:", error);
       Swal.fire({
@@ -228,8 +209,8 @@ const BookingRoom = () => {
           <label className="relative">
             <input
               type="text"
-              className="input input-bordered rounded-xl w-full bg-white drop-shadow-lg text-xl text-gray-800 pl-14"
-              value={`: ${room.TYPE_NAME}`}
+              className="input rounded-xl w-full bg-white text-xl text-gray-800 pl-14"
+              value={` : ${room.TYPE_NAME}`}
               readOnly
             />
             <FaDoorClosed className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-800 text-4xl" />
@@ -240,8 +221,8 @@ const BookingRoom = () => {
           <label className="relative">
             <input
               type="text"
-              className="input input-bordered rounded-xl w-full bg-white drop-shadow-lg text-xl text-gray-800 pl-14"
-              value={`: ${room.BUILD_NAME} ${room.FLOOR_NAME}`}
+              className="input rounded-xl w-full bg-white text-xl text-gray-800 pl-14"
+              value={` : ${room.FLOOR_NAME}-${room.BUILD_NAME}`}
               readOnly
             />
             <FaBuilding className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-800 text-3xl" />
@@ -252,8 +233,8 @@ const BookingRoom = () => {
           <label className="relative">
             <input
               type="text"
-              className="input input-bordered rounded-xl w-full bg-white drop-shadow-lg text-xl text-gray-800 pl-14"
-              value={`: ${room.ROOM_NAME}`}
+              className="input rounded-xl w-full bg-white text-xl text-gray-800 pl-14"
+              value={` : ${room.ROOM_NAME}`}
               readOnly
             />
             <FaDoorOpen className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-800 text-4xl" />

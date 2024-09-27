@@ -32,11 +32,11 @@ router.post("/report_to", async (req, res) => {
     FROM booking WHERE 
     EXTRACT(MONTH FROM book_date) = :selected_month 
     AND EXTRACT(YEAR FROM book_date) = :selected_year`,
-    {
-      selected_month: month,
-      selected_year: year,
-    }
-  );
+      {
+        selected_month: month,
+        selected_year: year,
+      }
+    );
     // กำหนดชื่อคอลัมน์ (header) จาก metadata ของคอลัมน์ใน result
     const headers = result.metaData.map((col) => col.name);
 
