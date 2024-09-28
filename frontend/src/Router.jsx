@@ -13,6 +13,7 @@ import AddBuild from "./components/AddBuild.jsx";
 import AddRoom from "./components/AddRoom.jsx";
 import EditRoom from "./components/EditRoom.jsx";
 import AddFloor from "./components/AddFloor.jsx";
+import AllRoom from "./components/AllRoom.jsx";
 
 import "./index.css";
 import User from "./components/User.jsx";
@@ -58,12 +59,13 @@ const routes = [
       },
       {
         path: "manage-room/*",
-        element: <AddRoom />,
+        element: <AllRoom />,
         children: [
           {
-            path: "edit-room",
+            path: "edit-room/:room_id",
             element: <EditRoom />,
           },
+          
         ],
       },
       {
@@ -114,6 +116,7 @@ const routes = [
         path: "use-room",
         element: <UseRoom />,
       },
+
     ],
   },
 ];
