@@ -56,6 +56,7 @@ const EditUser = () => {
       posi_id: posiId,
       dep_id: depId,
     };
+    
 
     fetch(`http://localhost:5000/user/${empID}`, {
       // Use empID for the update

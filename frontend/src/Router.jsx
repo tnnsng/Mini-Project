@@ -65,7 +65,10 @@ const routes = [
             path: "edit-room/:room_id",
             element: <EditRoom />,
           },
-          
+          {
+            path: "add-room",
+            element: <AddRoom />,
+          },
         ],
       },
       {
@@ -95,7 +98,7 @@ const routes = [
         element: <User />,
         children: [
           {
-            path: "add-room",
+            path: "add-user",
             element: <AddUser />,
           },
           {

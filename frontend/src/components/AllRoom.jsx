@@ -49,11 +49,15 @@ const AllRoom = () => {
         <div className="p-8 bg-white text-gray-800 min-h-screen">
             <h1 className="text-3xl mb-8">ห้องทั้งหมด</h1>
 
-            <div className="fixed right-4 mb-8">
-                <button className="bg-red-900 px-4 py-2 text-white hover:bg-red-950 rounded-xl">
-                    {/*<Link to={`AddRoom/${room.ROOM_ID}`}>เพิ่มห้อง</Link>*/}
-                </button>       
+                {/* ปุ่มเพิ่มห้อง */}
+                <div className="mb-4 flex justify-end">
+                <Link to="add-room">
+                    <button className="bg-red-900 px-4 py-2 text-white hover:bg-red-950 rounded-xl">
+                        เพิ่มห้อง
+                    </button>
+                </Link>       
             </div>
+
 
            
             {/* ตารางแสดงห้อง */}

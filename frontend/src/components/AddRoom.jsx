@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaAngleLeft } from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom"; 
 import axios from "axios";
 
 const AddRoom = () => {
@@ -18,6 +19,11 @@ const AddRoom = () => {
   const [selectedBuild, setSelectedBuild] = useState("");  // ตึกที่ถูกเลือก
   const [selectedFloor, setSelectedFloor] = useState("");  // ชั้นที่ถูกเลือก
   const [selectedAmount, setSelectedAmount] = useState("");  // จำนวนคนที่ถูกเลือก
+
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   // เรียกข้อมูลจาก API เมื่อคอมโพเนนต์ถูกสร้างขึ้น
   useEffect(() => {
@@ -69,13 +75,16 @@ const AddRoom = () => {
     ? floors.filter((floor) => floor.BUILD_ID === selectedBuild)
     : Array.from(new Map(floors.map((f) => [f.FLOOR_NAME, f])).values());
 
-  // ฟังก์ชันกรองข้อมูลห้อง
+
 
   return (
     <div className="p-8 bg-white text-gray-800 min-h-screen">
       <div className="grid grid-cols-1 gap-6 mb-10">
         <div className="flex items-center gap-10 mb-6">
-          <button className="btn btn-circle bg-red-900 text-white border-red-900 hover:bg-red-950">
+        <button
+            onClick={handleBack}
+            className="btn btn-circle bg-red-900 text-white border-red-900 hover:bg-red-950"
+          >
             <FaAngleLeft className="text-4xl" />
           </button>
           <h1 className="text-3xl">เพิ่มห้อง</h1>
@@ -111,7 +120,7 @@ const AddRoom = () => {
               onChange={(e) => setRoomCapacity(e.target.value)}
             >
               <option value="">เลือกจำนวนคน</option>
-              <option value="">เลือกจำนวนการบรรจุ</option>
+              
               {rooms.map((amount, index) => (
                 <option key={index} value={amount.AMOUNT}>
                   {amount.AMOUNT} คน
