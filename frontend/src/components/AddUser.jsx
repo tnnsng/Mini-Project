@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const AddUser = () => {
-  const [empId, setEmpId] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [username, setUsername] = useState("");
@@ -19,7 +18,6 @@ const AddUser = () => {
 
     // User data to send to the API
     const newUser = {
-      emp_id: empId,
       fname: fname,
       lname: lname,
       username: username,
@@ -68,19 +66,6 @@ const AddUser = () => {
       {/* Form section */}
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-6 mb-10">
-          {/* Employee ID input */}
-          <div>
-            <label className="block mb-2 text-md">รหัสพนักงาน (EMP_ID)</label>
-            <input
-              type="text"
-              value={empId}
-              onChange={(e) => setEmpId(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
-              placeholder="EMP_ID"
-              required
-            />
-          </div>
-
           {/* First Name input */}
           <div>
             <label className="block mb-2 text-md">ชื่อ (FNAME)</label>

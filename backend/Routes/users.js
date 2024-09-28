@@ -111,7 +111,6 @@ router.post("/user", async (req, res) => {
   let connection;
   try {
     const {
-      emp_id,
       fname,
       lname,
       username,
@@ -122,9 +121,25 @@ router.post("/user", async (req, res) => {
       dep_id,
     } = req.body;
 
+    connection = await getDbConnection();
+
+    const result_emp = await connection.execute(
+      `SELECT EMP_ID FROM (SELECT EMP_ID FROM EMPLOYEE ORDER BY EMP_ID DESC) WHERE ROWNUM = 1`
+    );
+
+    let rows = result_emp.rows;
+    let newEmployeeID = "E0001"; // ค่าปริยายถ้าไม่มีผู้ใช้ในฐานข้อมูล
+
+    if (rows.length > 0) {
+      const lastEmployeeID = rows[0][0]; // ดึง BOOK_ID จากแถวแรก
+      const lastNumber = parseInt(lastEmployeeID.substring(1), 10);
+      const newNumber = lastNumber + 1;
+      newEmployeeID = `E${newNumber.toString().padStart(4, "0")}`;
+    }
+
     // Validate input data
     if (
-      !emp_id ||
+      !newEmployeeID ||
       !fname ||
       !lname ||
       !username ||
@@ -144,7 +159,7 @@ router.post("/user", async (req, res) => {
       `INSERT INTO employee (emp_id, fname, lname, username, password, amount, status_id, posi_id, dep_id)
       VALUES (:emp_id, :fname, :lname, :username, :password, :amount, :status_id, :posi_id, :dep_id)`,
       {
-        emp_id,
+        emp_id: newEmployeeID,
         fname,
         lname,
         username,
@@ -163,7 +178,7 @@ router.post("/user", async (req, res) => {
     // Respond with success
     res
       .status(201)
-      .json({ message: "User created successfully", userId: emp_id });
+      .json({ message: "User created successfully", userId: newEmployeeID });
   } catch (err) {
     console.error("Error executing query", err);
     res.status(500).json({ error: "Internal Server Error" });
