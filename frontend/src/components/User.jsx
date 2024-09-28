@@ -110,9 +110,9 @@ const User = () => {
               <tr>
                 <td
                   className="border border-gray-500 px-6 py-4 text-center"
-                  colSpan="7"
+                  colSpan="9"
                 >
-                  No data available
+                  ไม่พบข้อมูลผู้ใช้!
                 </td>
               </tr>
             )}
@@ -123,7 +123,7 @@ const User = () => {
       {/* Add New User Button */}
       <div className="flex justify-end mt-6">
         <Link to="add-user">
-          <button className="px-6 py-2 bg-green-600 text-white text-xl rounded-xl hover:bg-green-800">
+          <button className="px-6 py-2 bg-green-600 text-white text-2xl rounded-xl hover:bg-green-800">
             เพิ่มผู้ใช้
           </button>
         </Link>

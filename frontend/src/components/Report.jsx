@@ -72,7 +72,7 @@ const Report = () => {
         <h1 className="text-3xl">Meeting Room Booking Report</h1>
       </div>
 
-      <div className="flex justify-end items-center mb-2">
+      <div className="flex justify-center items-center mb-2">
         <div className="flex flex-row">
           <label className="w-36 p-3 mt-1">Select Month:</label>
           <DatePicker
@@ -104,7 +104,7 @@ const Report = () => {
             </div>
             <div className="bg-gradient-to-r from-red-400 to-red-600 text-white pl-6 p-6 rounded-lg drop-shadow-xl">
               <h2 className="text-2xl mb-2">Bookings Cancel Amount</h2>
-              <p className="text-4xl">{dataReport[0]?.CANCLE || 0}</p>
+              <p className="text-4xl">{dataReport[0]?.CANCEL || 0}</p>
             </div>
           </div>
           <div className="flex items-center gap-6 mb-8">

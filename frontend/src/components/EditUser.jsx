@@ -8,7 +8,7 @@ const EditUser = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState(""); // Password is optional for editing
   const [amount, setAmount] = useState(0);
-  const [statusId, setStatusId] = useState("");
+  const [status, setStatus] = useState("");
   const [posiId, setPosiId] = useState("");
   const [depId, setDepId] = useState("");
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ const EditUser = () => {
         setLname(data.LNAME);
         setUsername(data.USERNAME);
         setAmount(data.AMOUNT);
-        setStatusId(data.STATUS_ID);
+        setStatus(data.STATUS_ID);
         setPosiId(data.POSI_ID);
         setDepId(data.DEP_ID);
         setPassword(data.PASSWORD);
@@ -52,7 +52,7 @@ const EditUser = () => {
       username: username,
       password: password || undefined, // Optional, only update if changed
       amount: amount,
-      status_id: statusId,
+      status_id: status,
       posi_id: posiId,
       dep_id: depId,
     };
@@ -95,22 +95,9 @@ const EditUser = () => {
       {/* Form section */}
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-6 mb-10">
-          {/* Employee ID display */}
-          <div>
-            <label className="block mb-2 text-md">รหัสพนักงาน (EMP_ID)</label>
-            <input
-              type="text"
-              value={empId}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
-              placeholder="EMP_ID"
-              required
-              disabled // Make it uneditable
-            />
-          </div>
-
           {/* First Name input */}
           <div>
-            <label className="block mb-2 text-md">ชื่อ (FNAME)</label>
+            <label className="block mb-2 text-lg">First Name</label>
             <input
               type="text"
               value={fname}
@@ -123,7 +110,7 @@ const EditUser = () => {
 
           {/* Last Name input */}
           <div>
-            <label className="block mb-2 text-md">นามสกุล (LNAME)</label>
+            <label className="block mb-2 text-lg">Last Name</label>
             <input
               type="text"
               value={lname}
@@ -136,7 +123,7 @@ const EditUser = () => {
 
           {/* Username input */}
           <div>
-            <label className="block mb-2 text-md">ชื่อผู้ใช้ (USERNAME)</label>
+            <label className="block mb-2 text-lg">USERNAME</label>
             <input
               type="text"
               value={username}
@@ -149,9 +136,9 @@ const EditUser = () => {
 
           {/* Password input (optional for editing) */}
           <div>
-            <label className="block mb-2 text-md">รหัสผ่าน (PASSWORD)</label>
+            <label className="block mb-2 text-lg">PASSWORD</label>
             <input
-              type="password"
+              type="text"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
@@ -161,7 +148,7 @@ const EditUser = () => {
 
           {/* Amount input */}
           <div>
-            <label className="block mb-2 text-md">จำนวน (AMOUNT)</label>
+            <label className="block mb-2 text-lg">AMOUNT</label>
             <input
               type="number"
               value={amount}
@@ -174,20 +161,23 @@ const EditUser = () => {
 
           {/* Status ID input */}
           <div>
-            <label className="block mb-2 text-md">สถานะ (STATUS_ID)</label>
-            <input
-              type="text"
-              value={statusId}
-              onChange={(e) => setStatusId(e.target.value)}
+            <label className="block mb-2 text-lg">STATUS</label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
               className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
               placeholder="STATUS_ID"
               required
-            />
+            >
+              <option value="">เลือกสถานะ</option>
+              <option value="POS01">ล็อก</option>
+              <option value="POS02">ไม่ล็อก</option>
+            </select>
           </div>
 
           {/* Position ID dropdown */}
           <div>
-            <label className="block mb-2 text-md">ตำแหน่ง (POSI_ID)</label>
+            <label className="block mb-2 text-lg">POSITION</label>
             <select
               value={posiId}
               onChange={(e) => setPosiId(e.target.value)}
@@ -202,7 +192,7 @@ const EditUser = () => {
 
           {/* Department dropdown */}
           <div>
-            <label className="block mb-2 text-md">แผนก (DEP_ID)</label>
+            <label className="block mb-2 text-lg">DEPARTMENT</label>
             <select
               value={depId}
               onChange={(e) => setDepId(e.target.value)}
@@ -220,7 +210,7 @@ const EditUser = () => {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="px-6 py-2 bg-yellow-500 text-white rounded-xl text-lg hover:bg-yellow-800"
+            className="px-6 py-2 bg-yellow-500 text-white rounded-xl text-2xl hover:bg-yellow-800"
           >
             แก้ไขผู้ใช้
           </button>

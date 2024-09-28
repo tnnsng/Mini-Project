@@ -255,11 +255,12 @@ const Menu = () => {
 
           {hasPermission("PER05") && (
             <li
-              className="menu-item flex justify-start pl-2 p-1 cursor-pointer hover:bg-red-700 text-md relative"
+              className={`menu-item flex justify-start pl-2 p-1 cursor-pointer hover:bg-red-700 text-md relative
+                ${selectedMenu === "report" ? "bg-red-700" : ""}`}
               onMouseEnter={toggleReportDropdown}
               onMouseLeave={toggleReportDropdown}
             >
-              <div className="flex items-center pl-0">
+              <div className={`flex items-center pl-0 `}>
                 <BiSolidReport className="text-lg" /> Report
               </div>
               {showReportDropdown && (
@@ -277,6 +278,7 @@ const Menu = () => {
                     <Link
                       to={"/main/report"}
                       className="menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md"
+                      onClick={() => handleMenuSelect("report")}
                     >
                       <GoTriangleRight className="mr-2 text-lg" /> Report 2
                     </Link>

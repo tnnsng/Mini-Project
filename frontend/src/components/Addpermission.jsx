@@ -70,7 +70,7 @@ const AddPermission = () => {
           (permId) => selectedPermissions[permId]
         ),
       };
-  
+
       const response = await axios.post(
         "http://localhost:5000/updatePermissions",
         payload
@@ -83,7 +83,7 @@ const AddPermission = () => {
           confirmButtonText: "OK",
         });
       }
-  
+
       // รีเซ็ตค่าให้กลับไปเป็นค่าเริ่มต้น
       setSelectedPosition("");
       setSelectedPermissions({}); // รีเซ็ตสิทธิ์ที่เลือก
@@ -92,14 +92,14 @@ const AddPermission = () => {
       setError("ไม่สามารถอัปเดตสิทธิ์ได้. กรุณาลองใหม่.");
     }
   };
-  
 
   return (
     <div className="p-8 bg-white text-gray-800 min-h-screen">
       <div className="grid grid-cols-1 gap-6 mb-6">
-        <h1 className="text-3xl">Permission</h1>
+        <h1 className="text-3xl">จัดการข้อมูลสิทธิ์การใช้งาน</h1>
       </div>
-      {error && <div className="text-red-600">{error}</div>} {/* แสดงข้อผิดพลาด */}
+      {error && <div className="text-red-600">{error}</div>}{" "}
+      {/* แสดงข้อผิดพลาด */}
       <div>
         <label className="block text-lg font-medium mb-2">ตำแหน่ง</label>
         <select
@@ -129,7 +129,7 @@ const AddPermission = () => {
           </div>
         </div>
       ))}
-      <div className="fixed bottom-6 right-4">
+      <div className="fixed bottom-6 right-6">
         <button
           onClick={handleEdit}
           className="bg-red-900 text-2xl text-center text-white py-2 px-6 rounded-xl hover:bg-red-950"

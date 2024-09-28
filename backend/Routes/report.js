@@ -30,8 +30,8 @@ router.post("/report_to", async (req, res) => {
     COUNT(CASE WHEN app_id = 'SA006' THEN 1 END) AS use,
     COUNT(CASE WHEN app_id = 'SA005' THEN 1 END) AS cancel
     FROM booking WHERE 
-    EXTRACT(MONTH FROM book_date) = :selected_month 
-    AND EXTRACT(YEAR FROM book_date) = :selected_year`,
+    EXTRACT(MONTH FROM startdate) = :selected_month 
+    AND EXTRACT(YEAR FROM startdate) = :selected_year`,
       {
         selected_month: month,
         selected_year: year,

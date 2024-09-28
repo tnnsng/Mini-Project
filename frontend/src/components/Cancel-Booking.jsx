@@ -26,6 +26,15 @@ const CancelBooking = () => {
   const navigate = useNavigate();
 
   const handleCancel = async () => {
+    // Check if the reason is provided
+    if (!reason) {
+      Swal.fire({
+        icon: "warning",
+        title: "กรุณาใส่เหตุผลในการยกเลิก",
+        text: "โปรดกรอกเหตุผลก่อนทำการยกเลิกการจอง",
+      });
+      return; // Stop further execution if no reason is provided
+    }
     try {
       const now = new Date();
       const bookDate = formatDateToUniversal(now);

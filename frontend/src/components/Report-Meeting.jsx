@@ -22,10 +22,6 @@ const ReportMeeting = () => {
   const [noData, setNoData] = useState(false); // State for no data condition
   const [rooms, setRooms] = useState([]);
 
-  const handleRoomChange = (e) => {
-    setSelectedRoom(e.target.value);
-  };
-
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -89,21 +85,19 @@ const ReportMeeting = () => {
       {/* ฟอร์มเลือกห้องและเดือน */}
       <div className="flex space-x-4 justify-center mb-4">
         <div>
-          <label className="block mb-1">Select or Enter Room:</label>
-          <input
-            list="room-list"
+          <label className="block mb-1">Select Room:</label>
+          <select
             value={selectedRoom}
-            onChange={handleRoomChange}
+            onChange={(e) => setSelectedRoom(e.target.value)}
             className="border p-2 rounded bg-white"
-            placeholder="Type or select a room"
-          />
-          <datalist id="room-list">
+          >
+            <option value="">Select a Room...</option>
             {rooms.map((room, index) => (
               <option key={index} value={room.ROOM_NAME}>
                 {room.ROOM_NAME}
               </option>
             ))}
-          </datalist>
+          </select>
         </div>
 
         <div>
