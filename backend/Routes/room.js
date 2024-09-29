@@ -70,6 +70,70 @@ router.get("/room", async (req, res) => {
   }
 });
 
+// สร้าง route สำหรับดึงข้อมูลห้องตาม ROOM_ID
+router.get("/room/:room_id", async (req, res) => {
+  let connection;
+  try {
+    const roomId = req.params.room_id; // ดึง ROOM_ID จาก URL
+    connection = await getDbConnection();
+
+    // ดึงข้อมูลห้องจากฐานข้อมูลตาม room_id
+    const result = await connection.execute(
+      `SELECT r.room_id, 
+              r.room_name, 
+              r.amount, 
+              r.detail, 
+              b.build_id,
+              b.build_name, 
+              f.floor_id,
+              f.floor_name,
+              r.type_id,
+              t.type_name, 
+              s.stroom_name, 
+              e.fname, 
+              e.lname
+      FROM room r
+      JOIN build b ON b.build_id = r.build_id
+      JOIN floor f ON f.floor_id = r.floor_id
+      JOIN type t ON t.type_id = r.type_id
+      JOIN statusroom s ON s.stroom_id = r.stroom_id
+      JOIN employee e ON e.emp_id = r.emp_id
+      WHERE r.room_id = :room_id`,
+      [roomId]
+    );
+
+    // ตรวจสอบว่าพบข้อมูลห้องหรือไม่
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Room not found" });
+    }
+
+    // แปลงข้อมูลห้องเป็น JSON
+    const headers = result.metaData.map((col) => col.name);
+    const roomData = result.rows.map((row) => {
+      let rowData = {};
+      row.forEach((cell, index) => {
+        rowData[headers[index]] = cell;
+      });
+      return rowData;
+    })[0]; // ดึงแถวแรก
+
+    // ส่งข้อมูลห้องเป็น JSON
+    res.json(roomData);
+  } catch (err) {
+    console.error("Error executing query", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error("Error closing connection", err);
+      }
+    }
+  }
+});
+
+
 router.post("/room", async (req, res) => {
   let connection;
   try {
