@@ -18,6 +18,7 @@ import UseRoom from "../components/UseRoom.jsx";
 import EditUser from "../components/EditUser.jsx";
 import AddUser from "../components/AddUser.jsx";
 import UnlockUser from "../components/UnlockUser.jsx";
+import AllRoom from "../components/Manage-Room.jsx";
 
 function Main() {
   return (
@@ -48,7 +49,8 @@ function Main() {
           <Route path="report" element={<Report />} />
           <Route path="report-meeting" element={<ReportMeeting />} />
 
-          <Route path="manage-room" element={<AddRoom />} />
+          <Route path="manage-room" element={<AllRoom />} />
+          <Route path="manage-room/add-room" element={<AddRoom />} />
           <Route path="manage-room/edit-room/:roomID" element={<EditRoom />} />
 
           <Route path="manage-building" element={<AddBuild />} />

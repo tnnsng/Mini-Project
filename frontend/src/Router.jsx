@@ -24,6 +24,7 @@ import UseRoom from "./components/UseRoom.jsx";
 import EditUser from "./components/EditUser.jsx";
 import AddUser from "./components/AddUser.jsx";
 import UnlockUser from "./components/UnlockUser.jsx";
+import AllRoom from "./components/Manage-Room.jsx";
 
 const routes = [
   {
@@ -58,11 +59,15 @@ const routes = [
       },
       {
         path: "manage-room/*",
-        element: <AddRoom />,
+        element: <AllRoom />,
         children: [
           {
             path: "edit-room",
             element: <EditRoom />,
+          },
+          {
+            path: "add-room",
+            element: <AddRoom />,
           },
         ],
       },
