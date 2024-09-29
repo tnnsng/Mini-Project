@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import { FaAngleLeft, FaEye, FaEyeSlash } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const EditUser = () => {
   const [empId, setEmpId] = useState("");
@@ -7,10 +10,17 @@ const EditUser = () => {
   const [lname, setLname] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState(""); // Password is optional for editing
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const [amount, setAmount] = useState(0);
   const [status, setStatus] = useState("");
-  const [posiId, setPosiId] = useState("");
-  const [depId, setDepId] = useState("");
+  //const [posiId, setPosiId] = useState("");
+  //const [depId, setDepId] = useState("");
+
+  const [position, setPosition] = useState([]);
+  const [department, setDepartment] = useState([]);
+  const [selectedPosition, setSelectedPosition] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+
   const navigate = useNavigate();
   const { empID } = useParams(); // Get the user ID from the route params
 
@@ -30,8 +40,10 @@ const EditUser = () => {
         setUsername(data.USERNAME);
         setAmount(data.AMOUNT);
         setStatus(data.STATUS_ID);
-        setPosiId(data.POSI_ID);
-        setDepId(data.DEP_ID);
+        //setPosiId(data.POSI_ID);
+        //setDepId(data.DEP_ID);
+        setSelectedPosition(data.POSI_ID);
+        setSelectedDepartment(data.DEP_ID);
         setPassword(data.PASSWORD);
       })
       .catch((error) => {
@@ -39,6 +51,28 @@ const EditUser = () => {
         alert("Error fetching user data");
       });
   }, [empID]); // Use empID from useParams
+
+  useEffect(() => {
+    const fetchPosition = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/position");
+        setPosition(response.data);
+      } catch (error) {
+        console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
+      }
+    };
+    const fetchDepartment = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/dep");
+        setDepartment(response.data);
+      } catch (error) {
+        console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
+      }
+    };
+
+    fetchDepartment();
+    fetchPosition();
+  }, []);
 
   // Function to handle form submission
   const handleSubmit = (e) => {
@@ -53,43 +87,54 @@ const EditUser = () => {
       password: password || undefined, // Optional, only update if changed
       amount: amount,
       status_id: status,
-      posi_id: posiId,
-      dep_id: depId,
+      posi_id: selectedPosition,
+      dep_id: selectedDepartment,
     };
 
-    fetch(`http://localhost:5000/user/${empID}`, {
-      // Use empID for the update
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedUser),
-    })
-      .then((response) => {
-        if (response.ok) {
-          alert("แก้ไขผู้ใช้สำเร็จ!");
-          navigate("/main/manage-user");
-        } else {
-          alert("เกิดข้อผิดพลาดขณะแก้ไขผู้ใช้");
-        }
-      })
-      .catch((error) => {
-        console.error("Error updating user:", error);
-        alert("เกิดข้อผิดพลาดขณะแก้ไขผู้ใช้");
-      });
+    Swal.fire({
+      title: "ยืนยันการแก้ไข",
+      text: `คุณต้องการแก้ไขผู้ใช้ ${fname} ${lname} ใช่หรือไม่?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "ใช่, แก้ไขเลย!",
+      cancelButtonText: "ยกเลิก",
+      dangerMode: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`http://localhost:5000/user/${empID}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedUser),
+        })
+          .then((response) => {
+            if (response.ok) {
+              Swal.fire("สำเร็จ!", "แก้ไขผู้ใช้สำเร็จ!", "success");
+              navigate("/main/manage-user");
+            } else {
+              Swal.fire("เกิดข้อผิดพลาด!", "ไม่สามารถแก้ไขผู้ใช้ได้", "error");
+            }
+          })
+          .catch((error) => {
+            console.error("Error updating user:", error);
+            Swal.fire("เกิดข้อผิดพลาด!", "ไม่สามารถแก้ไขผู้ใช้ได้", "error");
+          });
+      }
+    });
   };
 
   return (
     <div className="p-8 bg-white text-gray-800 min-h-screen">
       {/* Back button and header */}
-      <div className="flex items-center mb-6">
+      <div className="flex items-center mb-6 gap-6">
         <button
+          className="btn btn-circle bg-red-900 text-white border-red-900 hover:bg-red-950"
           onClick={() => navigate(-1)}
-          className="text-red-700 text-3xl pr-4"
         >
-          &lt;
+          <FaAngleLeft className="text-4xl" />
         </button>
-        <h1 className="text-3xl">แก้ไขผู้ใช้</h1>
+        <h1 className="text-3xl">แก้ไขข้อมูลผู้ใช้</h1>
       </div>
 
       {/* Form section */}
@@ -134,59 +179,39 @@ const EditUser = () => {
             />
           </div>
 
-          {/* Password input (optional for editing) */}
-          <div>
+          {/* Password input with show/hide feature */}
+          <div className="relative">
             <label className="block mb-2 text-lg">PASSWORD</label>
             <input
-              type="text"
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
               placeholder="กรุณาใส่รหัสผ่านใหม่หากต้องการเปลี่ยน"
             />
-          </div>
-
-          {/* Amount input */}
-          <div>
-            <label className="block mb-2 text-lg">AMOUNT</label>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
-              placeholder="Amount"
-              required
-            />
-          </div>
-
-          {/* Status ID input */}
-          <div>
-            <label className="block mb-2 text-lg">STATUS</label>
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
-              placeholder="STATUS_ID"
-              required
+            <span
+              className="absolute right-3 top-12 cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
             >
-              <option value="">เลือกสถานะ</option>
-              <option value="POS01">ล็อก</option>
-              <option value="POS02">ไม่ล็อก</option>
-            </select>
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
           </div>
 
           {/* Position ID dropdown */}
           <div>
             <label className="block mb-2 text-lg">POSITION</label>
             <select
-              value={posiId}
-              onChange={(e) => setPosiId(e.target.value)}
+              value={selectedPosition}
+              onChange={(e) => setSelectedPosition(e.target.value)}
               className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
               required
             >
               <option value="">เลือกตำแหน่ง</option>
-              <option value="POS01">ตำแหน่ง 1</option>
-              <option value="POS02">ตำแหน่ง 2</option>
+              {position.map((posi, index) => (
+                <option key={index} value={posi.POSI_ID}>
+                  {posi.POSI_NAME}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -194,14 +219,17 @@ const EditUser = () => {
           <div>
             <label className="block mb-2 text-lg">DEPARTMENT</label>
             <select
-              value={depId}
-              onChange={(e) => setDepId(e.target.value)}
+              value={selectedDepartment}
+              onChange={(e) => setSelectedDepartment(e.target.value)}
               className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
               required
             >
               <option value="">เลือกแผนก</option>
-              <option value="DEP01">แผนก 1</option>
-              <option value="DEP02">แผนก 2</option>
+              {department.map((dep, index) => (
+                <option key={index} value={dep.DEP_ID}>
+                  {dep.DEP_NAME}
+                </option>
+              ))}
             </select>
           </div>
         </div>

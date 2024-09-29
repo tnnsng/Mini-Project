@@ -65,7 +65,7 @@ const User = () => {
               <th>Last Name</th>
               <th>Username</th>
               <th>Password</th>
-              <th>Lock Amount</th>
+              <th>Amount</th>
               <th>Status</th>
               <th>Position</th>
               <th>Department</th>

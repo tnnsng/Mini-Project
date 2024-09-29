@@ -47,10 +47,12 @@ function Main() {
 
           <Route path="report" element={<Report />} />
           <Route path="report-meeting" element={<ReportMeeting />} />
+
           <Route path="manage-room" element={<AddRoom />} />
+          <Route path="manage-room/edit-room/:roomID" element={<EditRoom />} />
+
           <Route path="manage-building" element={<AddBuild />} />
           <Route path="manage-floor" element={<AddFloor />} />
-          <Route path="edit-room" element={<EditRoom />} />
 
           <Route path="manage-user" element={<User />} />
           <Route path="manage-user/add-user" element={<AddUser />} />

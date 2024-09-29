@@ -1,64 +1,117 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaAngleLeft } from "react-icons/fa";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const AddUser = () => {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [amount, setAmount] = useState(0);
-  const [statusId, setStatusId] = useState("");
-  const [posiId, setPosiId] = useState("");
-  const [depId, setDepId] = useState("");
   const navigate = useNavigate();
+
+  const [position, setPosition] = useState([]);
+  const [department, setDepartment] = useState([]);
+  const [selectedPosition, setSelectedPosition] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+
+  useEffect(() => {
+    const fetchPosition = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/position");
+        setPosition(response.data);
+      } catch (error) {
+        console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
+      }
+    };
+    const fetchDepartment = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/dep");
+        setDepartment(response.data);
+      } catch (error) {
+        console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
+      }
+    };
+
+    fetchDepartment();
+    fetchPosition();
+  }, []);
 
   // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // User data to send to the API
+    // หาชื่อของ Position และ Department ตาม ID ที่เลือก
+    const posiName = position.find(
+      (posi) => posi.POSI_ID === selectedPosition
+    )?.POSI_NAME;
+    const depName = department.find(
+      (dep) => dep.DEP_ID === selectedDepartment
+    )?.DEP_NAME;
+
+    // ข้อมูลผู้ใช้ที่เพิ่มมาแสดงใน SweetAlert ก่อนบันทึก
     const newUser = {
       fname: fname,
       lname: lname,
       username: username,
       password: password,
-      amount: amount,
-      status_id: statusId,
-      posi_id: posiId,
-      dep_id: depId,
+      amount: 0,
+      status_id: "SE001",
+      posi_id: selectedPosition,
+      dep_id: selectedDepartment,
     };
 
-    // API call to add user
-    fetch("http://localhost:5000/user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newUser),
-    })
-      .then((response) => {
-        if (response.ok) {
-          alert("เพิ่มผู้ใช้สำเร็จ!");
-          navigate("/main/manage-user"); // Redirect back to the user management page
-        } else {
-          alert("เกิดข้อผิดพลาดขณะเพิ่มผู้ใช้");
-        }
-      })
-      .catch((error) => {
-        console.error("Error adding user:", error);
-        alert("เกิดข้อผิดพลาดขณะเพิ่มผู้ใช้");
-      });
+    // แสดงการยืนยันด้วยข้อมูลที่กรอก
+    Swal.fire({
+      title: "ยืนยันการเพิ่มผู้ใช้",
+      html: `
+        <strong>First Name:</strong> ${newUser.fname}<br />
+        <strong>Last Name:</strong> ${newUser.lname}<br />
+        <strong>Username:</strong> ${newUser.username}<br />
+        <strong>Password:</strong> ${newUser.password}<br />
+        <strong>Position:</strong> ${posiName}<br />
+        <strong>Department:</strong> ${depName}<br />
+      `,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ยกเลิก",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // ถ้ายืนยัน ให้ส่งข้อมูลไปยัง API
+        fetch("http://localhost:5000/user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newUser),
+        })
+          .then((response) => {
+            if (response.ok) {
+              Swal.fire("เพิ่มผู้ใช้สำเร็จ!", "", "success");
+              navigate("/main/manage-user"); // Redirect back to the user management page
+            } else {
+              Swal.fire("เกิดข้อผิดพลาดขณะเพิ่มผู้ใช้", "", "error");
+            }
+          })
+          .catch((error) => {
+            console.error("Error adding user:", error);
+            Swal.fire("เกิดข้อผิดพลาดขณะเพิ่มผู้ใช้", "", "error");
+          });
+      }
+    });
   };
 
   return (
     <div className="p-8 bg-white text-gray-800 min-h-screen">
       {/* Back button and header */}
-      <div className="flex items-center mb-6">
+      <div className="flex items-center mb-6 gap-6">
         <button
+          className="btn btn-circle bg-red-900 text-white border-red-900 hover:bg-red-950"
           onClick={() => navigate(-1)}
-          className="text-red-700 text-3xl pr-4"
         >
-          &lt;
+          <FaAngleLeft className="text-4xl" />
         </button>
         <h1 className="text-3xl">เพิ่มผู้ใช้</h1>
       </div>
@@ -68,7 +121,7 @@ const AddUser = () => {
         <div className="grid grid-cols-2 gap-6 mb-10">
           {/* First Name input */}
           <div>
-            <label className="block mb-2 text-md">ชื่อ (FNAME)</label>
+            <label className="block mb-2 text-lg">FIRST NAME</label>
             <input
               type="text"
               value={fname}
@@ -81,7 +134,7 @@ const AddUser = () => {
 
           {/* Last Name input */}
           <div>
-            <label className="block mb-2 text-md">นามสกุล (LNAME)</label>
+            <label className="block mb-2 text-lg">LAST NAME</label>
             <input
               type="text"
               value={lname}
@@ -94,7 +147,7 @@ const AddUser = () => {
 
           {/* Username input */}
           <div>
-            <label className="block mb-2 text-md">ชื่อผู้ใช้ (USERNAME)</label>
+            <label className="block mb-2 text-lg">USERNAME</label>
             <input
               type="text"
               value={username}
@@ -107,7 +160,7 @@ const AddUser = () => {
 
           {/* Password input */}
           <div>
-            <label className="block mb-2 text-md">รหัสผ่าน (PASSWORD)</label>
+            <label className="block mb-2 text-lg">PASSWORD</label>
             <input
               type="password"
               value={password}
@@ -118,59 +171,39 @@ const AddUser = () => {
             />
           </div>
 
-          {/* Amount input */}
-          <div>
-            <label className="block mb-2 text-md">จำนวน (AMOUNT)</label>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
-              placeholder="Amount"
-              required
-            />
-          </div>
-
-          {/* Status ID input */}
-          <div>
-            <label className="block mb-2 text-md">สถานะ (STATUS_ID)</label>
-            <input
-              type="text"
-              value={statusId}
-              onChange={(e) => setStatusId(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
-              placeholder="STATUS_ID"
-              required
-            />
-          </div>
-
           {/* Position ID dropdown */}
           <div>
-            <label className="block mb-2 text-md">ตำแหน่ง (POSI_ID)</label>
+            <label className="block mb-2 text-lg">POSITION</label>
             <select
-              value={posiId}
-              onChange={(e) => setPosiId(e.target.value)}
+              value={selectedPosition}
+              onChange={(e) => setSelectedPosition(e.target.value)}
               className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
               required
             >
               <option value="">เลือกตำแหน่ง</option>
-              <option value="POS01">ตำแหน่ง 1</option>
-              <option value="POS02">ตำแหน่ง 2</option>
+              {position.map((posi, index) => (
+                <option key={index} value={posi.POSI_ID}>
+                  {posi.POSI_NAME}
+                </option>
+              ))}
             </select>
           </div>
 
           {/* Department dropdown */}
           <div>
-            <label className="block mb-2 text-md">แผนก (DEP_ID)</label>
+            <label className="block mb-2 text-lg">DEPARTMENT</label>
             <select
-              value={depId}
-              onChange={(e) => setDepId(e.target.value)}
+              value={selectedDepartment}
+              onChange={(e) => setSelectedDepartment(e.target.value)}
               className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
               required
             >
               <option value="">เลือกแผนก</option>
-              <option value="DEP01">แผนก 1</option>
-              <option value="DEP02">แผนก 2</option>
+              {department.map((dep, index) => (
+                <option key={index} value={dep.DEP_ID}>
+                  {dep.DEP_NAME}
+                </option>
+              ))}
             </select>
           </div>
         </div>

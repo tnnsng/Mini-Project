@@ -93,7 +93,7 @@ const routes = [
         element: <User />,
         children: [
           {
-            path: "add-room",
+            path: "add-user",
             element: <AddUser />,
           },
           {
