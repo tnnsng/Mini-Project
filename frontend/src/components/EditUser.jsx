@@ -13,8 +13,6 @@ const EditUser = () => {
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const [amount, setAmount] = useState(0);
   const [status, setStatus] = useState("");
-  //const [posiId, setPosiId] = useState("");
-  //const [depId, setDepId] = useState("");
 
   const [position, setPosition] = useState([]);
   const [department, setDepartment] = useState([]);
@@ -40,8 +38,6 @@ const EditUser = () => {
         setUsername(data.USERNAME);
         setAmount(data.AMOUNT);
         setStatus(data.STATUS_ID);
-        //setPosiId(data.POSI_ID);
-        //setDepId(data.DEP_ID);
         setSelectedPosition(data.POSI_ID);
         setSelectedDepartment(data.DEP_ID);
         setPassword(data.PASSWORD);
