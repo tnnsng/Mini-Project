@@ -1,42 +1,43 @@
 import { useState, useEffect } from "react";
 import { FaAngleLeft } from "react-icons/fa";
-import { useNavigate, useParams } from "react-router-dom"; 
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const EditRoom = () => {
   const navigate = useNavigate();
-  const { ROOM_ID } = useParams(); // ดึง ROOM_ID จาก URL
+  const { roomID } = useParams(); // ดึง ROOM_ID จาก URL
 
   const handleBack = () => {
     navigate(-1);
   };
 
-  const [roomName, setRoomName] = useState(''); 
-  const [roomType, setRoomType] = useState(''); 
-  const [roomCapacity, setRoomCapacity] = useState(''); 
-  const [building, setBuilding] = useState(''); 
-  const [floor, setFloor] = useState(''); 
-  const [roomDetail, setRoomDetail] = useState(''); 
+  const [roomName, setRoomName] = useState("");
+  const [roomType, setRoomType] = useState("");
+  const [roomCapacity, setRoomCapacity] = useState("");
+  const [building, setBuilding] = useState("");
+  const [floor, setFloor] = useState("");
+  const [roomDetail, setRoomDetail] = useState("");
 
-  const [type, setType] = useState([]); 
-  const [build, setBuild] = useState([]); 
-  const [floors, setFloors] = useState([]); 
-  const [rooms, setRooms] = useState([]); 
+  const [type, setType] = useState([]);
+  const [build, setBuild] = useState([]);
+  const [floors, setFloors] = useState([]);
+  const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
     const fetchRoomData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/room/${ROOM_ID}`);
+        const response = await fetch(`http://localhost:5000/room/${roomID}`);
         if (!response.ok) {
           throw new Error("Failed to fetch room data");
         }
         const roomData = await response.json();
+
         setRoomName(roomData.ROOM_NAME);
-        setRoomType(roomData.TYPE_ID);
+        setRoomType(roomData.TYPE_NAME);
         setRoomCapacity(roomData.AMOUNT);
-        setBuilding(roomData.BUILD_ID);
+        setBuilding(roomData.BUILD_NAME);
         setFloor(roomData.FLOOR_NAME);
-        setRoomDetail(roomData.ROOM_DETAIL);
+        setRoomDetail(roomData.DETAIL);
       } catch (error) {
         console.error("Error fetching room data:", error);
         alert("Error fetching room data");
@@ -85,14 +86,12 @@ const EditRoom = () => {
     fetchBuilds();
     fetchFloors();
     fetchRooms();
-  }, [ROOM_ID]);
+  }, [roomID]);
 
   // กรองชั้นตามตึกที่เลือก
   const uniqueFloors = building
     ? floors.filter((floor) => floor.BUILD_ID === building)
-    : Array.from(
-        new Map(floors.map((f) => [f.FLOOR_NAME, f])).values()
-    );
+    : Array.from(new Map(floors.map((f) => [f.FLOOR_NAME, f])).values());
 
   // ฟังก์ชันอัปเดตห้อง
   const handleUpdateRoom = async () => {
@@ -106,10 +105,13 @@ const EditRoom = () => {
     };
 
     try {
-      const response = await axios.put(`http://localhost:5000/room/${ROOM_ID}`, updatedRoom);
+      const response = await axios.put(
+        `http://localhost:5000/room/${roomID}`,
+        updatedRoom
+      );
       if (response.status === 200) {
         alert("แก้ไขห้องสำเร็จ!");
-        navigate("/main/manage-room"); 
+        navigate("/main/manage-room");
       }
     } catch (error) {
       console.error("เกิดข้อผิดพลาดในการอัปเดตห้อง:", error);
@@ -129,7 +131,7 @@ const EditRoom = () => {
           </button>
           <h1 className="text-3xl">แก้ไขห้อง</h1>
         </div>
-        
+
         <div className="grid grid-cols-2 gap-6 mb-10 ">
           <div>
             <label className="block">
@@ -139,7 +141,6 @@ const EditRoom = () => {
                 value={roomName}
                 onChange={(e) => setRoomName(e.target.value)}
                 className="mt-1 block w-72 px-3 py-2 bg-white border-2 border-red-900 rounded-2xl focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
-                
               />
             </label>
           </div>
@@ -149,7 +150,6 @@ const EditRoom = () => {
               className="select select-bordered rounded-2xl w-72 bg-white border-2 border-red-900"
               value={roomType}
               onChange={(e) => setRoomType(e.target.value)}
-              
             >
               <option value="">เลือกประเภทห้อง</option>
               {type.map((type, index) => (
@@ -165,7 +165,6 @@ const EditRoom = () => {
               className="select select-bordered rounded-2xl w-72 bg-white border-2 border-red-900"
               value={roomCapacity}
               onChange={(e) => setRoomCapacity(e.target.value)}
-              
             >
               <option value="">เลือกจำนวนคน</option>
               {rooms.map((room, index) => (
@@ -181,7 +180,6 @@ const EditRoom = () => {
               className="select select-bordered rounded-2xl w-72 bg-white border-2 border-red-900"
               value={building}
               onChange={(e) => setBuilding(e.target.value)}
-              
             >
               <option value="">เลือกตึก</option>
               {build.map((build, index) => (
@@ -191,7 +189,7 @@ const EditRoom = () => {
               ))}
             </select>
           </div>
-        
+
           <div>
             <select
               className="select select-bordered rounded-2xl w-72 bg-white border-2 border-red-900"
@@ -221,9 +219,10 @@ const EditRoom = () => {
       </div>
 
       <div className="fixed bottom-4 right-4">
-        <button 
+        <button
           onClick={handleUpdateRoom} // เรียกใช้ฟังก์ชันอัปเดตเมื่อคลิก
-          className="bg-yellow-500 text-2xl text-center text-white py-2 px-6 rounded-xl hover:bg-yellow-600">
+          className="bg-yellow-500 text-2xl text-center text-white py-2 px-6 rounded-xl hover:bg-yellow-600"
+        >
           แก้ไขห้อง
         </button>
       </div>
