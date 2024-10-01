@@ -119,23 +119,30 @@ const EditRoom = () => {
   // ฟังก์ชันอัปเดตห้อง
   const handleUpdateRoom = async () => {
     const updatedRoom = {
-      TYPE_ID: roomType,
-      AMOUNT: roomCapacity,
-      BUILD_ID: building,
-      FLOOR_ID: floor,
-      DETAIL: roomDetail,
-      ROOM_NAME: roomName,
-      STROOM_ID: roomStatus,
-      EMP_ID: emp,
+      room_name: roomName, // Changed to lowercase
+      amount: Number(roomCapacity), // Ensured it's a number
+      detail: roomDetail,
+      build_id: building,
+      floor_id: floor,
+      type_id: roomType,
+      stroom_id: roomStatus,
+      emp_id: emp,
     };
+
+    console.log("Updated Room Data:", updatedRoom); // For debugging
 
     try {
       const response = await axios.put(
         `http://localhost:5000/room/${roomID}`,
-        updatedRoom
+        updatedRoom,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
       if (response.status === 200) {
-        // แจ้งเตือนสำเร็จด้วย SweetAlert
+        // Success notification
         await Swal.fire({
           icon: "success",
           title: "แก้ไขห้องสำเร็จ!",
@@ -145,11 +152,14 @@ const EditRoom = () => {
         navigate("/main/manage-room");
       }
     } catch (error) {
-      console.error("เกิดข้อผิดพลาดในการอัปเดตห้อง:", error);
+      console.error(
+        "เกิดข้อผิดพลาดในการอัปเดตห้อง:",
+        error.response?.data || error.message
+      );
       await Swal.fire({
         icon: "error",
         title: "เกิดข้อผิดพลาด",
-        text: "ไม่สามารถแก้ไขห้องได้",
+        text: error.response?.data?.error || "ไม่สามารถแก้ไขห้องได้",
         confirmButtonText: "ตกลง",
       });
     }

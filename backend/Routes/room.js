@@ -89,7 +89,9 @@ router.get("/room/:room_id", async (req, res) => {
               f.floor_name,
               r.type_id,
               t.type_name, 
+              s.stroom_id,
               s.stroom_name, 
+              e.emp_id,
               e.fname, 
               e.lname
       FROM room r

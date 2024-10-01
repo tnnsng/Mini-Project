@@ -59,7 +59,7 @@ const AllRoom = () => {
       {/* ปุ่มเพิ่มห้อง */}
       <div className="mb-4 flex justify-end">
         <Link to="add-room">
-          <button className="bg-green-500 px-4 py-2 text-white hover:bg-green-800 rounded-2xl">
+          <button className="bg-green-500 px-4 py-2 text-xl text-white hover:bg-green-800 rounded-2xl">
             เพิ่มห้อง
           </button>
         </Link>
@@ -74,6 +74,7 @@ const AllRoom = () => {
               <th>Room</th>
               <th>Build</th>
               <th>Floor</th>
+              <th>Status</th>
               <th>Management</th>
             </tr>
           </thead>
@@ -88,6 +89,13 @@ const AllRoom = () => {
                   <td>{room.ROOM_NAME}</td>
                   <td>{room.BUILD_NAME}</td>
                   <td>{room.FLOOR_NAME}</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      className="toggle toggle-success"
+                      defaultChecked
+                    />
+                  </td>
 
                   {/* Edit and Delete Buttons in the Same Cell */}
                   <td>
