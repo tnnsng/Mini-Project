@@ -1,52 +1,20 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { FaAngleLeft } from "react-icons/fa";
 import axios from "axios";
-import { FaAngleLeft, FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from "sweetalert2";
 
-const EditUser = () => {
-  const [empId, setEmpId] = useState("");
+const AddUser = () => {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState(""); // Password is optional for editing
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
-  const [amount, setAmount] = useState(0);
-  const [status, setStatus] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const [position, setPosition] = useState([]);
   const [department, setDepartment] = useState([]);
   const [selectedPosition, setSelectedPosition] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("");
-
-  const navigate = useNavigate();
-  const { empID } = useParams(); // Get the user ID from the route params
-
-  // Fetch the existing user data when the component mounts
-  useEffect(() => {
-    fetch(`http://203.188.54.9/~u6611850015/api/users/${empID}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch user data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setEmpId(data.EMP_ID);
-        setFname(data.FNAME);
-        setLname(data.LNAME);
-        setUsername(data.USERNAME);
-        setAmount(data.AMOUNT);
-        setStatus(data.STATUS_ID);
-        setSelectedPosition(data.POSI_ID);
-        setSelectedDepartment(data.DEP_ID);
-        setPassword(data.PASSWORD);
-      })
-      .catch((error) => {
-        console.error("Error fetching user data:", error);
-        alert("Error fetching user data");
-      });
-  }, [empID]); // Use empID from useParams
 
   useEffect(() => {
     const fetchPosition = async () => {
@@ -74,47 +42,62 @@ const EditUser = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // User data to send to the API
-    const updatedUser = {
-      emp_id: empId,
+    // หาชื่อของ Position และ Department ตาม ID ที่เลือก
+    const posiName = position.find(
+      (posi) => posi.POSI_ID === selectedPosition
+    )?.POSI_NAME;
+    const depName = department.find(
+      (dep) => dep.DEP_ID === selectedDepartment
+    )?.DEP_NAME;
+
+    // ข้อมูลผู้ใช้ที่เพิ่มมาแสดงใน SweetAlert ก่อนบันทึก
+    const newUser = {
       fname: fname,
       lname: lname,
       username: username,
-      password: password || undefined, // Optional, only update if changed
-      amount: amount,
-      status_id: status,
+      password: password,
+      amount: 0,
+      status_id: "SE001",
       posi_id: selectedPosition,
       dep_id: selectedDepartment,
     };
 
+    // แสดงการยืนยันด้วยข้อมูลที่กรอก
     Swal.fire({
-      title: "ยืนยันการแก้ไข",
-      text: `คุณต้องการแก้ไขผู้ใช้ ${fname} ${lname} ใช่หรือไม่?`,
+      title: "ยืนยันการเพิ่มผู้ใช้",
+      html: `
+        <strong>First Name:</strong> ${newUser.fname}<br />
+        <strong>Last Name:</strong> ${newUser.lname}<br />
+        <strong>Username:</strong> ${newUser.username}<br />
+        <strong>Password:</strong> ${newUser.password}<br />
+        <strong>Position:</strong> ${posiName}<br />
+        <strong>Department:</strong> ${depName}<br />
+      `,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "ใช่, แก้ไขเลย!",
+      confirmButtonText: "ยืนยัน",
       cancelButtonText: "ยกเลิก",
-      dangerMode: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://203.188.54.9/~u6611850015/api/user/${empID}`, {
-          method: "PUT",
+        // ถ้ายืนยัน ให้ส่งข้อมูลไปยัง API
+        fetch("http://203.188.54.9/~u6611850015/api/user", {
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(updatedUser),
+          body: JSON.stringify(newUser),
         })
           .then((response) => {
             if (response.ok) {
-              Swal.fire("สำเร็จ!", "แก้ไขผู้ใช้สำเร็จ!", "success");
-              navigate("/main/manage-user");
+              Swal.fire("เพิ่มผู้ใช้สำเร็จ!", "", "success");
+              navigate("/main/manage-user"); // Redirect back to the user management page
             } else {
-              Swal.fire("เกิดข้อผิดพลาด!", "ไม่สามารถแก้ไขผู้ใช้ได้", "error");
+              Swal.fire("เกิดข้อผิดพลาดขณะเพิ่มผู้ใช้", "", "error");
             }
           })
           .catch((error) => {
-            console.error("Error updating user:", error);
-            Swal.fire("เกิดข้อผิดพลาด!", "ไม่สามารถแก้ไขผู้ใช้ได้", "error");
+            console.error("Error adding user:", error);
+            Swal.fire("เกิดข้อผิดพลาดขณะเพิ่มผู้ใช้", "", "error");
           });
       }
     });
@@ -130,7 +113,7 @@ const EditUser = () => {
         >
           <FaAngleLeft className="text-4xl" />
         </button>
-        <h1 className="text-3xl">แก้ไขข้อมูลผู้ใช้</h1>
+        <h1 className="text-3xl">เพิ่มผู้ใช้</h1>
       </div>
 
       {/* Form section */}
@@ -138,12 +121,12 @@ const EditUser = () => {
         <div className="grid grid-cols-2 gap-6 mb-10">
           {/* First Name input */}
           <div>
-            <label className="block mb-2 text-lg">First Name</label>
+            <label className="block mb-2 text-lg">FIRST NAME</label>
             <input
               type="text"
               value={fname}
               onChange={(e) => setFname(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
+              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
               placeholder="ชื่อ"
               required
             />
@@ -151,12 +134,12 @@ const EditUser = () => {
 
           {/* Last Name input */}
           <div>
-            <label className="block mb-2 text-lg">Last Name</label>
+            <label className="block mb-2 text-lg">LAST NAME</label>
             <input
               type="text"
               value={lname}
               onChange={(e) => setLname(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
+              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
               placeholder="นามสกุล"
               required
             />
@@ -169,28 +152,23 @@ const EditUser = () => {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
+              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
               placeholder="Username"
               required
             />
           </div>
 
-          {/* Password input with show/hide feature */}
-          <div className="relative">
+          {/* Password input */}
+          <div>
             <label className="block mb-2 text-lg">PASSWORD</label>
             <input
-              type={showPassword ? "text" : "password"}
+              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
-              placeholder="กรุณาใส่รหัสผ่านใหม่หากต้องการเปลี่ยน"
+              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
+              placeholder="Password"
+              required
             />
-            <span
-              className="absolute right-3 top-12 cursor-pointer"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </span>
           </div>
 
           {/* Position ID dropdown */}
@@ -199,7 +177,7 @@ const EditUser = () => {
             <select
               value={selectedPosition}
               onChange={(e) => setSelectedPosition(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
+              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
               required
             >
               <option value="">เลือกตำแหน่ง</option>
@@ -217,7 +195,7 @@ const EditUser = () => {
             <select
               value={selectedDepartment}
               onChange={(e) => setSelectedDepartment(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-500 rounded-xl bg-white"
+              className="w-full px-4 py-2 border border-gray-500 rounded-lg bg-white"
               required
             >
               <option value="">เลือกแผนก</option>
@@ -234,9 +212,9 @@ const EditUser = () => {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="px-6 py-2 bg-yellow-500 text-white rounded-xl text-2xl hover:bg-yellow-800"
+            className="px-6 py-2 bg-green-600 text-white text-xl rounded-xl hover:bg-green-800"
           >
-            แก้ไขผู้ใช้
+            เพิ่มผู้ใช้
           </button>
         </div>
       </form>
@@ -244,4 +222,4 @@ const EditUser = () => {
   );
 };
 
-export default EditUser;
+export default AddUser;

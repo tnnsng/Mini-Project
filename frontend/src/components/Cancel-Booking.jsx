@@ -26,12 +26,21 @@ const CancelBooking = () => {
   const navigate = useNavigate();
 
   const handleCancel = async () => {
+    // Check if the reason is provided
+    if (!reason) {
+      Swal.fire({
+        icon: "warning",
+        title: "กรุณาใส่เหตุผลในการยกเลิก",
+        text: "โปรดกรอกเหตุผลก่อนทำการยกเลิกการจอง",
+      });
+      return; // Stop further execution if no reason is provided
+    }
     try {
       const now = new Date();
       const bookDate = formatDateToUniversal(now);
 
       const response = await fetch(
-        `http://localhost:5000/cancle/${booking.BOOK_ID}`,
+        `http://203.188.54.9/~u6611850015/api/cancle/${booking.BOOK_ID}`,
         {
           method: "POST",
           headers: {
@@ -113,7 +122,7 @@ const CancelBooking = () => {
             <input
               type="text"
               className="input rounded-xl w-full bg-white text-xl text-gray-800 pl-14"
-              value={`: ${booking.BUILD_NAME}`}
+              value={`: ${booking.FLOOR_NAME}-${booking.BUILD_NAME}`}
               readOnly
             />
             <FaBuilding className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-800 text-3xl" />

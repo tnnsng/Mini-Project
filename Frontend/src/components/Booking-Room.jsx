@@ -77,7 +77,7 @@ const BookingRoom = () => {
       const formattedStartDate = formatDateToUniversal(startDateTime);
       const formattedEndDate = formatDateToUniversal(endDateTime);
 
-      const response = await fetch("http://localhost:5000/booking", {
+      const response = await fetch("http://203.188.54.9/~u6611850015/api/booking", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

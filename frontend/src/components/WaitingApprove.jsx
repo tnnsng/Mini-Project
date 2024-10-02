@@ -11,7 +11,7 @@ const Waiting = () => {
   useEffect(() => {
     const fetchWaiting = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/waitapprove");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/waitapprove");
         setWaiting(response.data);
       } catch (error) {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
@@ -28,7 +28,7 @@ const Waiting = () => {
 
   const handleApprove = async (bookId) => {
     try {
-      const response = await fetch(`http://localhost:5000/approved/${bookId}`, {
+      const response = await fetch(`http://203.188.54.9/~u6611850015/api/approved/${bookId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -79,7 +79,7 @@ const Waiting = () => {
 
     if (reason) {
       try {
-        const response = await fetch("http://localhost:5000/not-approved", {
+        const response = await fetch("http://203.188.54.9/~u6611850015/api/not-approved", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

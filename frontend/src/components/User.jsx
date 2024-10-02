@@ -9,7 +9,7 @@ const User = () => {
 
   // Fetch data from the API when the component mounts
   useEffect(() => {
-    fetch("http://localhost:5000/users")
+    fetch("http://203.188.54.9/~u6611850015/api/users")
       .then((response) => response.json())
       .then((data) => {
         setUsers(data); // Update state with the fetched data
@@ -32,7 +32,7 @@ const User = () => {
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:5000/user/${empId}`, {
+        fetch(`http://203.188.54.9/~u6611850015/api/user/${empId}`, {
           method: "DELETE", // HTTP method for deleting
         })
           .then((response) => {
@@ -65,7 +65,7 @@ const User = () => {
               <th>Last Name</th>
               <th>Username</th>
               <th>Password</th>
-              <th>Lock Amount</th>
+              <th>Amount</th>
               <th>Status</th>
               <th>Position</th>
               <th>Department</th>
@@ -110,9 +110,9 @@ const User = () => {
               <tr>
                 <td
                   className="border border-gray-500 px-6 py-4 text-center"
-                  colSpan="7"
+                  colSpan="9"
                 >
-                  No data available
+                  ไม่พบข้อมูลผู้ใช้!
                 </td>
               </tr>
             )}
@@ -122,8 +122,8 @@ const User = () => {
 
       {/* Add New User Button */}
       <div className="flex justify-end mt-6">
-        <Link to="/main/add-user">
-          <button className="px-6 py-3 bg-red-700 text-white text-xl rounded-xl hover:bg-red-950">
+        <Link to="add-user">
+          <button className="px-6 py-2 bg-green-600 text-white text-2xl rounded-xl hover:bg-green-800">
             เพิ่มผู้ใช้
           </button>
         </Link>
