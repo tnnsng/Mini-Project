@@ -39,7 +39,8 @@ router.get("/room", async (req, res) => {
       JOIN floor f ON f.floor_id = r.floor_id
       JOIN type t ON t.type_id = r.type_id
       JOIN statusroom s ON s.stroom_id = r.stroom_id
-      JOIN employee e ON e.emp_id = r.emp_id`
+      JOIN employee e ON e.emp_id = r.emp_id
+      ORDER BY r.room_id`
     );
 
     // กำหนดชื่อคอลัมน์ (header) จาก metadata ของคอลัมน์ใน result
@@ -139,7 +140,6 @@ router.post("/room", async (req, res) => {
   let connection;
   try {
     const {
-      room_id,
       room_name,
       amount,
       detail,
@@ -150,9 +150,25 @@ router.post("/room", async (req, res) => {
       emp_id,
     } = req.body;
 
+    connection = await getDbConnection();
+
+    const result_room = await connection.execute(
+      `SELECT ROOM_ID FROM (SELECT ROOM_ID FROM ROOM ORDER BY ROOM_ID DESC) WHERE ROWNUM = 1`
+    );
+
+    let rows = result_room.rows;
+    let newRoomID = "R0001"; // ค่าปริยายถ้าไม่มีผู้ใช้ในฐานข้อมูล
+
+    if (rows.length > 0) {
+      const lastRoomID = rows[0][0];
+      const lastNumber = parseInt(lastRoomID.substring(1), 10);
+      const newNumber = lastNumber + 1;
+      newRoomID = `R${newNumber.toString().padStart(4, "0")}`;
+    }
+
     // Validate input data
     if (
-      !room_id ||
+      !newRoomID ||
       !room_name ||
       !amount ||
       !build_id ||
@@ -171,7 +187,7 @@ router.post("/room", async (req, res) => {
       `INSERT INTO room (room_id, room_name, amount, detail, build_id, floor_id, type_id, stroom_id, emp_id)
       VALUES (:room_id, :room_name, :amount, :detail, :build_id, :floor_id, :type_id, :stroom_id, :emp_id)`,
       {
-        room_id,
+        room_id: newRoomID,
         room_name,
         amount,
         detail,
@@ -191,7 +207,7 @@ router.post("/room", async (req, res) => {
     // Respond with success
     res
       .status(201)
-      .json({ message: "Room created successfully", roomId: room_id });
+      .json({ message: "Room created successfully", roomId: newRoomID });
   } catch (err) {
     console.error("Error executing query", err);
     res.status(500).json({ error: "Internal Server Error" });

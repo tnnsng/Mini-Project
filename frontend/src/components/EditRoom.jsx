@@ -220,43 +220,44 @@ const EditRoom = () => {
             />
           </div>
 
-          {/* ตึก */}
-          <div className="col-span-1">
-            <label className="block">ตึก</label>
-            <select
-              className="select select-bordered rounded-xl w-full bg-white border border-gray-500"
-              value={building}
-              onChange={(e) => setBuilding(e.target.value)}
-            >
-              <option value="">เลือกตึก</option>
-              {build.map((build, index) => (
-                <option key={index} value={build.BUILD_ID}>
-                  {build.BUILD_NAME}
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* ตึก ชั้น*/}
+          <div className="flex flex-cols-2 gap-6">
+            <div className="col-span-1 w-full">
+              <label className="block">ตึก</label>
+              <select
+                className="select select-bordered rounded-xl w-full bg-white border border-gray-500"
+                value={building}
+                onChange={(e) => setBuilding(e.target.value)}
+              >
+                <option value="">เลือกตึก</option>
+                {build.map((build, index) => (
+                  <option key={index} value={build.BUILD_ID}>
+                    {build.BUILD_NAME}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          {/* ชั้น */}
-          <div className="col-span-1">
-            <label className="block">ชั้น</label>
-            <select
-              className="select select-bordered rounded-xl w-full bg-white border border-gray-500"
-              value={floor}
-              onChange={(e) => setFloor(e.target.value)}
-              required
-            >
-              <option value="">เลือกชั้น</option>
-              {uniqueFloors.map((floor, index) => (
-                <option key={index} value={floor.FLOOR_ID}>
-                  {floor.FLOOR_NAME}
-                </option>
-              ))}
-            </select>
+            <div className="col-span-1 w-full">
+              <label className="block">ชั้น</label>
+              <select
+                className="select select-bordered rounded-xl w-full bg-white border border-gray-500"
+                value={floor}
+                onChange={(e) => setFloor(e.target.value)}
+                required
+              >
+                <option value="">เลือกชั้น</option>
+                {uniqueFloors.map((floor, index) => (
+                  <option key={index} value={floor.FLOOR_ID}>
+                    {floor.FLOOR_NAME}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* รายละเอียด */}
-          <div className="col-span-1">
+          <div className="col-span-2">
             <label className="block">รายละเอียด</label>
             <input
               type="text"
