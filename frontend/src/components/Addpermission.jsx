@@ -78,8 +78,8 @@ const AddPermission = () => {
       if (response.data) {
         Swal.fire({
           icon: "success",
-          title: "แก้ไขสิทธิ์สำเร็จ!",
-          html: response.data.message,
+          title: "แก้ไขสำเร็จ!",
+          html: "แก้ไขสิทธิ์การใช้งานสำเร็จ",
           confirmButtonText: "OK",
         });
       }

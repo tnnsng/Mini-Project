@@ -286,7 +286,7 @@ const ChooseRoom = () => {
                   <th>Amount</th>
                   <th>Status</th>
                   <th className="text-left">Detail</th>
-                  <th>Booking Detail</th>
+                  <th>Reserve</th>
                 </tr>
               </thead>
               <tbody>
@@ -325,8 +325,8 @@ const ChooseRoom = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="8" className="text-center">
-                      No rooms found!!
+                    <td colSpan="9" className="text-center">
+                      Rooms Not found!!
                     </td>
                   </tr>
                 )}

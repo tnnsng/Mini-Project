@@ -21,7 +21,7 @@ import axios from "axios";
 
 const Menu = () => {
   const [fname, setFname] = useState("");
-  const [lname, setLname] = useState("");
+  //const [lname, setLname] = useState("");
   const [positionName, setPositionName] = useState("");
   const [permissions, setPermissions] = useState([]);
 
@@ -47,7 +47,7 @@ const Menu = () => {
       setFname(storedFname);
     }
     if (storedLname) {
-      setLname(storedLname);
+      //setLname(storedLname);
     }
     if (storedPositionName) {
       setPositionName(storedPositionName);
@@ -111,9 +111,7 @@ const Menu = () => {
           <FaUser className="text-3xl text-red-900" />
         </div>
         <div className="user-details flex flex-col">
-          <h2 className="text-xl">
-            {fname} {lname}
-          </h2>
+          <h2 className="text-lg">{fname}</h2>
           <p className="text-md text-white">{positionName}</p>
         </div>
       </div>
