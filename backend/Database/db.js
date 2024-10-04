@@ -1,7 +1,7 @@
 // Database configuration
 const dbConfig = {
-  user: "db671086",
-  password: "54064",
+  user: "db671087",
+  password: "64333",
   connectString: "203.188.54.7:1521/database",
 };
 

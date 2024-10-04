@@ -38,7 +38,11 @@ function Login() {
             text: `ยินดีต้อนรับ : ${fname} ${lname}`,
             confirmButtonText: "OK",
           }).then(() => {
-            navigate("/main/home");
+            if(posi_id == "POS04"){
+              navigate("/main/manage-room");
+            }else{
+              navigate("/main/home");
+            } 
           });
         } else {
           throw new Error("Missing data from the server");

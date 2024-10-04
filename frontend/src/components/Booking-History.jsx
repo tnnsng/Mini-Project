@@ -16,6 +16,8 @@ const BookingHistory = () => {
       try {
         const response = await axios.get("http://localhost:5000/booking");
         setBooking(response.data); // เก็บข้อมูลห้องที่ได้จาก API
+        console.log(response.data)
+
       } catch (error) {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
       }
@@ -83,6 +85,7 @@ const BookingHistory = () => {
           <tbody>
             {filteredBooking.length > 0 ? (
               filteredBooking.map((booking, index) => (
+                
                 <tr key={booking.BOOK_ID} className="text-center text-lg">
                   <td>{index + 1}</td>
                   <td>{booking.ROOM_NAME}</td>
@@ -101,21 +104,33 @@ const BookingHistory = () => {
                       >
                         รอการอนุมัติ
                       </button>
-                    ) : booking.APP_ID === "SA005" ? (
+                    )
+                     : booking.APP_ID === "SA005" ? (
                       <button
                         className="bg-gray-500 text-white py-2 px-4 rounded-2xl"
                         disabled
                       >
                         โดนยกเลิก
                       </button>
-                    ) : (
+                    )
+                    : booking.APP_ID === "SA006" ? (
+                      <button
+                        className=" text-white py-2 px-4 rounded-2xl"
+                        disabled
+                      >
+                        ใช้งานแล้ว
+                      </button>
+                    ) 
+                    : (
                       <button
                         className="bg-green-500 text-white py-2 px-4 rounded-2xl hover:bg-green-800"
                         onClick={(e) => handleQrCode(e, booking)} // ส่ง booking เข้าไป
                       >
                         QR Code
                       </button>
-                    )}
+                    )
+                    
+                    }
                   </td>
 
                   <td className="flex justify-center items-center">

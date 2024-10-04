@@ -58,11 +58,7 @@ router.get("/use-room/:id", async (req, res) => {
       return res
         .status(403)
         .json({ error: "Cannot use the room before the start time" });
-    } else if (startdate < new Date()) {
-      return res
-        .status(403)
-        .json({ error: "Unable to use the room because it was past time !!!" });
-    }
+    } 
 
     // จากนั้นดำเนินการต่อเพื่อตรวจสอบเวลาที่หมดอายุ
     const timeCheck = await connection.execute(

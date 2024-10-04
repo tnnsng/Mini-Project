@@ -145,6 +145,7 @@ const Menu = () => {
             </Link>
           )}
 
+          {hasPermission("PER01") && (
           <Link
             to={"/main/use-room"}
             className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
@@ -154,6 +155,7 @@ const Menu = () => {
           >
             <FaWalking className="mr-2 text-lg" /> Use Room
           </Link>
+          )}
 
           {hasPermission("PER02") && (
             <Link
@@ -167,6 +169,7 @@ const Menu = () => {
             </Link>
           )}
 
+{hasPermission("PER07") && (
           <Link
             to={"/main/manage-building"}
             className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
@@ -176,7 +179,9 @@ const Menu = () => {
           >
             <FaBuilding className="mr-2 text-lg" /> Manage Building
           </Link>
+)}
 
+{hasPermission("PER08") && (
           <Link
             to={"/main/manage-floor"}
             className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
@@ -186,6 +191,7 @@ const Menu = () => {
           >
             <FaBuilding className="mr-2 text-lg" /> Manage Floor
           </Link>
+)}
 
           {hasPermission("PER04") && (
             <Link
@@ -199,6 +205,7 @@ const Menu = () => {
             </Link>
           )}
 
+{hasPermission("PER04") && (
           <Link
             to={"/main/unlock-user"}
             className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
@@ -208,7 +215,9 @@ const Menu = () => {
           >
             <FaUserLock className="mr-2 text-lg" /> Unlock User
           </Link>
+)}
 
+{hasPermission("PER09") && (
           <Link
             to={"/main/waiting-approve"}
             className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
@@ -218,6 +227,7 @@ const Menu = () => {
           >
             <FaCheck className="mr-2 text-lg" /> Approve Booking
           </Link>
+)}
 
           {hasPermission("PER03") && (
             <Link
@@ -231,6 +241,7 @@ const Menu = () => {
             </Link>
           )}
 
+{hasPermission("PER06") && (
           <Link
             to={"/main/manage-department"}
             className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
@@ -240,7 +251,9 @@ const Menu = () => {
           >
             <FaUsersCog className="mr-2 text-lg" /> Manage Department
           </Link>
+)}
 
+{hasPermission("PER06") && (
           <Link
             to={"/main/manage-position"}
             className={`menu-item flex items-center justify-start pl-2 p-3 cursor-pointer hover:bg-red-700 text-md ${
@@ -250,6 +263,7 @@ const Menu = () => {
           >
             <FaUserTag className="mr-2 text-lg" /> Manage Position
           </Link>
+)}
 
           {hasPermission("PER05") && (
             <li

@@ -90,11 +90,7 @@ const AllRoom = () => {
                   <td>{room.BUILD_NAME}</td>
                   <td>{room.FLOOR_NAME}</td>
                   <td>
-                    <input
-                      type="checkbox"
-                      className="toggle toggle-success"
-                      defaultChecked
-                    />
+                  {room.STROOM_NAME}
                   </td>
 
                   {/* Edit and Delete Buttons in the Same Cell */}
