@@ -19,7 +19,7 @@ const AddUser = () => {
   useEffect(() => {
     const fetchPosition = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/position");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/position");
         setPosition(response.data);
       } catch (error) {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
@@ -27,7 +27,7 @@ const AddUser = () => {
     };
     const fetchDepartment = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/dep");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/dep");
         setDepartment(response.data);
       } catch (error) {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
@@ -80,7 +80,7 @@ const AddUser = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         // ถ้ายืนยัน ให้ส่งข้อมูลไปยัง API
-        fetch("http://localhost:5000/user", {
+        fetch("http://203.188.54.9/~u6611850015/api/user", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

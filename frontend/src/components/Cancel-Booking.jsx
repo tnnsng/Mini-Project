@@ -40,7 +40,7 @@ const CancelBooking = () => {
       const bookDate = formatDateToUniversal(now);
 
       const response = await fetch(
-        `http://localhost:5000/cancle/${booking.BOOK_ID}`,
+        `http://203.188.54.9/~u6611850015/api/cancle/${booking.BOOK_ID}`,
         {
           method: "POST",
           headers: {

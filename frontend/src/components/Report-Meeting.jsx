@@ -29,7 +29,7 @@ const ReportMeeting = () => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/room");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/room");
         setRooms(response.data);
       } catch (error) {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
@@ -43,7 +43,7 @@ const ReportMeeting = () => {
     const fetchShow = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:5000/report_1", {
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/report_1", {
           params: {
             room: selectedRoom,
             month: selectedDate.getMonth() + 1,

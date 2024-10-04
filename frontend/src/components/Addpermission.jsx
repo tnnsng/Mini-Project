@@ -12,7 +12,7 @@ const AddPermission = () => {
   useEffect(() => {
     const fetchPositions = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/position");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/position");
         setPositions(response.data);
       } catch (error) {
         console.error("Error fetching positions:", error);
@@ -21,7 +21,7 @@ const AddPermission = () => {
 
     const fetchPermissions = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/permission");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/permission");
         setPermissions(response.data);
       } catch (error) {
         console.error("Error fetching permissions:", error);
@@ -37,7 +37,7 @@ const AddPermission = () => {
       if (selectedPosition) {
         try {
           const response = await axios.get(
-            `http://localhost:5000/perposition/${selectedPosition}`
+            `http://203.188.54.9/~u6611850015/api/perposition/${selectedPosition}`
           );
           const perms = response.data.reduce((acc, perm) => {
             acc[perm.PER_ID] = true;
@@ -72,7 +72,7 @@ const AddPermission = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:5000/updatePermissions",
+        "http://203.188.54.9/~u6611850015/api/updatePermissions",
         payload
       );
       if (response.data) {

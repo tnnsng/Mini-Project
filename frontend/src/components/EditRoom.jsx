@@ -30,7 +30,7 @@ const EditRoom = () => {
   useEffect(() => {
     const fetchRoomData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/room/${roomID}`);
+        const response = await fetch(`http://~u6611850015/api/room/${roomID}`);
         if (!response.ok) {
           throw new Error("Failed to fetch room data");
         }
@@ -61,7 +61,7 @@ const EditRoom = () => {
     // ฟังก์ชันสำหรับดึงข้อมูลเพิ่มเติม (ประเภท ตึก ชั้น สถานะห้อง และพนักงาน)
     const fetchTypes = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/type");
+        const response = await axios.get("http://~u6611850015/api/type");
         setType(response.data);
       } catch (error) {
         console.error("Error fetching types:", error);
@@ -70,7 +70,7 @@ const EditRoom = () => {
 
     const fetchBuilds = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/build");
+        const response = await axios.get("http://~u6611850015/api/build");
         setBuild(response.data);
       } catch (error) {
         console.error("Error fetching builds:", error);
@@ -79,7 +79,7 @@ const EditRoom = () => {
 
     const fetchFloors = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/floor");
+        const response = await axios.get("http://~u6611850015/api/floor");
         setFloors(response.data);
       } catch (error) {
         console.error("Error fetching floors:", error);
@@ -88,7 +88,7 @@ const EditRoom = () => {
 
     const fetchStatuses = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/status");
+        const response = await axios.get("http://~u6611850015/api/status");
         setStatuses(response.data);
       } catch (error) {
         console.error("Error fetching statuses:", error);
@@ -97,7 +97,7 @@ const EditRoom = () => {
 
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/users");
+        const response = await axios.get("http://~u6611850015/api/users");
         setEmployees(response.data);
       } catch (error) {
         console.error("Error fetching employees:", error);
@@ -133,7 +133,7 @@ const EditRoom = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:5000/room/${roomID}`,
+        `http://~u6611850015/api/room/${roomID}`,
         updatedRoom,
         {
           headers: {

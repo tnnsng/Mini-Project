@@ -57,7 +57,7 @@ const Menu = () => {
     const fetchPermissions = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/perposition/${storedPositionID}`
+          `http://203.188.54.9/~u6611850015/api/perposition/${storedPositionID}`
         );
         setPermissions(response.data);
       } catch (error) {

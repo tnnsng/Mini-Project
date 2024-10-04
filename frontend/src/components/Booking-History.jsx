@@ -14,7 +14,7 @@ const BookingHistory = () => {
   useEffect(() => {
     const fetchBooking = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/booking");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/booking");
         setBooking(response.data); // เก็บข้อมูลห้องที่ได้จาก API
         console.log(response.data)
 

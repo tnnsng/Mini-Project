@@ -24,7 +24,7 @@ const EditUser = () => {
 
   // Fetch the existing user data when the component mounts
   useEffect(() => {
-    fetch(`http://localhost:5000/users/${empID}`)
+    fetch(`http://203.188.54.9/~u6611850015/api/users/${empID}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
@@ -51,7 +51,7 @@ const EditUser = () => {
   useEffect(() => {
     const fetchPosition = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/position");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/position");
         setPosition(response.data);
       } catch (error) {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
@@ -59,7 +59,7 @@ const EditUser = () => {
     };
     const fetchDepartment = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/dep");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/dep");
         setDepartment(response.data);
       } catch (error) {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
@@ -97,7 +97,7 @@ const EditUser = () => {
       dangerMode: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:5000/user/${empID}`, {
+        fetch(`http://203.188.54.9/~u6611850015/api/user/${empID}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",

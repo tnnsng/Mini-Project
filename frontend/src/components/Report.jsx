@@ -18,7 +18,7 @@ const Report = () => {
     const fetchLock = async () => {
       try {
         setLoading(true); // Set loading to true
-        const response = await axios.get("http://localhost:5000/report_lock");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/report_lock");
         setDataLock(response.data);
       } catch (error) {
         console.error("Error fetching lock data:", error);
@@ -30,7 +30,7 @@ const Report = () => {
     const fetchDept = async () => {
       try {
         setLoading(true); // Set loading to true
-        const response = await axios.get("http://localhost:5000/dep");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/dep");
         setDepartment(response.data);
       } catch (error) {
         console.error("Error fetching department data:", error);
@@ -44,7 +44,7 @@ const Report = () => {
         setLoading(true); // Set loading to true
         const month = selectedDate.getMonth() + 1;
         const year = selectedDate.getFullYear();
-        const response = await axios.post("http://localhost:5000/report_to", {
+        const response = await axios.post("http://203.188.54.9/~u6611850015/api/report_to", {
           month,
           year,
         });

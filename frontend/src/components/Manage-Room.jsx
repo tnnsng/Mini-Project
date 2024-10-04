@@ -11,7 +11,7 @@ const AllRoom = () => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/room");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/room");
         setRooms(response.data); // เก็บข้อมูลห้องที่ได้จาก API
       } catch (error) {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
@@ -34,7 +34,7 @@ const AllRoom = () => {
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:5000/room/${roomID}`, {
+        fetch(`http://203.188.54.9/~u6611850015/api/room/${roomID}`, {
           method: "DELETE", // HTTP method for deleting
         })
           .then((response) => {

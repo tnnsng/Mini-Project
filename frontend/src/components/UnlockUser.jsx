@@ -7,7 +7,7 @@ const UnlockUser = () => {
 
   // Fetch user data from API when component mounts
   useEffect(() => {
-    fetch("http://localhost:5000/users")
+    fetch("http://203.188.54.9/~u6611850015/api/users")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
@@ -47,7 +47,7 @@ const UnlockUser = () => {
           dep_id: user.DEP_ID,
         };
 
-        fetch(`http://localhost:5000/user/${user.EMP_ID}`, {
+        fetch(`http://203.188.54.9/~u6611850015/api/user/${user.EMP_ID}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",

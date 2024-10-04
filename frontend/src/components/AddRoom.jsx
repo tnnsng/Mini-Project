@@ -30,7 +30,7 @@ const AddRoom = () => {
   useEffect(() => {
     const fetchType = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/type");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/type");
         setType(response.data);
       } catch (error) {
         console.error("Error fetching types:", error);
@@ -39,7 +39,7 @@ const AddRoom = () => {
 
     const fetchBuild = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/build");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/build");
         setBuild(response.data);
       } catch (error) {
         console.error("Error fetching buildings:", error);
@@ -48,7 +48,7 @@ const AddRoom = () => {
 
     const fetchFloor = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/floor");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/floor");
         setFloors(response.data);
       } catch (error) {
         console.error("Error fetching floors:", error);
@@ -58,7 +58,7 @@ const AddRoom = () => {
     };
     const fetchStatuses = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/status");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/status");
         setStatuses(response.data);
       } catch (error) {
         console.error("Error fetching statuses:", error);
@@ -67,7 +67,7 @@ const AddRoom = () => {
 
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/users");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/users");
         setEmployees(response.data);
       } catch (error) {
         console.error("Error fetching employees:", error);
@@ -117,7 +117,7 @@ const AddRoom = () => {
           emp_id: emp,
         };
 
-        fetch("http://localhost:5000/room", {
+        fetch("http://203.188.54.9/~u6611850015/api/room", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -9,7 +9,7 @@ const User = () => {
 
   // Fetch data from the API when the component mounts
   useEffect(() => {
-    fetch("http://localhost:5000/users")
+    fetch("http://203.188.54.9/~u6611850015/api/users")
       .then((response) => response.json())
       .then((data) => {
         setUsers(data); // Update state with the fetched data
@@ -32,7 +32,7 @@ const User = () => {
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:5000/user/${empId}`, {
+        fetch(`http://203.188.54.9/~u6611850015/api/user/${empId}`, {
           method: "DELETE", // HTTP method for deleting
         })
           .then((response) => {

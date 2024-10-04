@@ -8,7 +8,7 @@ const UseRoom = () => {
   const fetchQr = async (code) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/use-room/${code}`
+        `http://203.188.54.9/~u6611850015/api/use-room/${code}`
       );
 
       const dateUse = new Date(response.data[0].DATE_USE);

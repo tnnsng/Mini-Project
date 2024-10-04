@@ -27,7 +27,7 @@ const ChooseRoom = () => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/room");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/room");
         setRooms(response.data); // เก็บข้อมูลห้องที่ได้จาก API
       } catch (error) {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
@@ -35,7 +35,7 @@ const ChooseRoom = () => {
     };
     const fetchType = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/type");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/type");
         setType(response.data);
       } catch (error) {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
@@ -43,7 +43,7 @@ const ChooseRoom = () => {
     };
     const fetchBuild = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/build");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/build");
         setBuild(response.data);
       } catch (error) {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
@@ -51,7 +51,7 @@ const ChooseRoom = () => {
     };
     const fetchFloor = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/floor");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/floor");
         setFloor(response.data);
       } catch (error) {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
@@ -59,7 +59,7 @@ const ChooseRoom = () => {
     };
     const fetchBooking = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/booking");
+        const response = await axios.get("http://203.188.54.9/~u6611850015/api/booking");
         setBooking(response.data); // เก็บข้อมูลห้องที่ได้จาก API
       } catch (error) {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
