@@ -12,15 +12,18 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://203.188.54.9/~u6611850015/api/login", {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        "http://203.188.54.9/~u6611850015/api/login",
+        {
+          username,
+          password,
+        }
+      );
 
       // เมื่อการล็อกอินสำเร็จ
       if (response.data.token) {
         const { token } = response.data;
-        const { emp_id, fname, lname, posi_id, posi_name } =
+        const { emp_id, fname, lname, posi_id, posi_name, amount } =
           response.data.payload.user;
 
         if (token && emp_id && fname && lname && posi_id && posi_name) {
@@ -32,18 +35,27 @@ function Login() {
           localStorage.setItem("posi_id", posi_id); // แก้ตรงนี้เพิ่ม posi_id
           localStorage.setItem("posi_name", posi_name);
 
-          Swal.fire({
-            icon: "success",
-            title: "เข้าสู่ระบบสำเร็จ",
-            text: `ยินดีต้อนรับ : ${fname} ${lname}`,
-            confirmButtonText: "OK",
-          }).then(() => {
-            if(posi_id == "POS04"){
-              navigate("/main/manage-room");
-            }else{
-              navigate("/main/home");
-            } 
-          });
+          if (amount == 3) {
+            Swal.fire({
+              icon: "error",
+              title: "คุณโดนล็อกการใช้งาน!",
+              text: "เนื่องจากคุณมีจำนวนการไม่เข้าใช้ห้องครบ 3 ครั้ง",
+              confirmButtonText: "ติดต่อผู้ดูแลเพื่อปลดล็อกการใช้งาน",
+            });
+          } else {
+            Swal.fire({
+              icon: "success",
+              title: "เข้าสู่ระบบสำเร็จ",
+              text: `ยินดีต้อนรับ : ${fname} ${lname}`,
+              confirmButtonText: "OK",
+            }).then(() => {
+              if (posi_id == "POS04") {
+                navigate("/main/manage-room");
+              } else {
+                navigate("/main/home");
+              }
+            });
+          }
         } else {
           throw new Error("Missing data from the server");
         }
